@@ -43,6 +43,11 @@ export default function Navbar() {
               </NavLink>
             </li>
             <li className="nav-item">
+              <NavLink to="/login" className="nav-link" onClick={() => document.querySelector('#mainNav').classList.remove('show')}>
+                Accedi
+              </NavLink>
+            </li>
+            <li className="nav-item">
               <a
                 className="nav-link"
                 href="#therealfooter"
