@@ -43,16 +43,29 @@ export default function Home() {
         </div>
         
 
-          <div className="alignBio">
-                      <div className="separator mbBio2" />
-
+        <div className="alignBio">
+            <div className="separator mbBio2" />
             <h2 className="titleBio">La nostra storia.</h2>
-            <img id="imgbw" src="/images/photoB&W.jpg" alt="Storia" />
-            <p>
-              Tradizione italiana, ingredienti freschi e forno a legna per momenti
-              indimenticabili di gusto e convivialità.
-            </p>
-          </div>
+
+            {/* CARD VIDEO con bordo gradiente */}
+           <div className="video-card mx-auto">
+            <div className="video-border">
+                <div className="video-card__inner aspect-16-9">
+                <img
+                    className="video-card__media"
+                    src="/images/loopPizza.gif"
+                    alt="Loop pizza"
+                    loading="lazy"
+                    decoding="async"
+                />
+                </div>
+            </div>
+            </div>
+
+
+
+            </div>
+
         </section>
 
         {/* RICETTA / IMMAGINI */}
@@ -63,7 +76,8 @@ export default function Home() {
                 <h4>La nostra pizza segue la ricetta della tradizione.</h4>
                 <p>
                   Impasto semplice e materie prime selezionate; lievito madre tramandato; pomodori locali:
-                  il risultato è un gusto autentico.
+                  il risultato è un gusto autentico.  Tradizione italiana, ingredienti freschi e forno a legna per momenti
+                indimenticabili di gusto e convivialità.
                 </p>
               </div>
               <div className="col">
