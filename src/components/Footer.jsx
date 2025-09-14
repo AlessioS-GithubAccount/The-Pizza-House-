@@ -23,8 +23,6 @@ export default function Footer() {
         <section className="where-we-are col-12 col-md-6">
           <h2 className="footer-section-title">Credits</h2>
           <ul>
-            <li><p>Production: The Net Value Srl</p></li>
-            <li><p>Team edition: Fullstack developer 11</p></li>
             <li><p>Author: Frontend development and design by Alessio Sanna</p></li>
           </ul>
         </section>
