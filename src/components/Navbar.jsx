@@ -2,22 +2,55 @@ import { NavLink, Link } from 'react-router-dom'
 
 export default function Navbar() {
   return (
-    <nav className="navbar navbar-expand-lg bg-body-tertiary fixed-top">
+    <nav className="navbar navbar-dark bg-dark fixed-top">
       <div className="container-fluid">
+        {/* Logo + brand */}
         <Link to="/" className="navbar-brand d-flex align-items-center">
-          <img id="logoPage" src="/images/pizza-logo-E6DE845BD3-seeklogo.com.png" alt="Logo" width="64" height="auto" />
+          <img
+            id="logoPage"
+            src="/images/pizza-logo-E6DE845BD3-seeklogo.com.png"
+            alt="Logo"
+            width="48"
+            height="auto"
+          />
           <span className="ms-2">THE PIZZA HOUSE</span>
         </Link>
 
-        <button className="navbar-toggler" type="button" data-bs-toggle="collapse" data-bs-target="#nav">
-          <span className="navbar-toggler-icon" />
+        {/* Burger button */}
+        <button
+          className="navbar-toggler"
+          type="button"
+          data-bs-toggle="collapse"
+          data-bs-target="#mainNav"
+          aria-controls="mainNav"
+          aria-expanded="false"
+          aria-label="Toggle navigation"
+        >
+          <span className="navbar-toggler-icon"></span>
         </button>
 
-        <div className="collapse navbar-collapse" id="nav">
-          <ul className="navbar-nav ms-auto">
-            <li className="nav-item"><NavLink to="/menu" className="nav-link">Menu</NavLink></li>
-            <li className="nav-item"><NavLink to="/ordina" className="nav-link">Ordina</NavLink></li>
-            <li className="nav-item"><a className="nav-link" href="#therealfooter">Contatti</a></li>
+        {/* Burger menu */}
+        <div className="collapse navbar-collapse" id="mainNav">
+          <ul className="navbar-nav ms-auto text-center">
+            <li className="nav-item">
+              <NavLink to="/menu" className="nav-link" onClick={() => document.querySelector('#mainNav').classList.remove('show')}>
+                Menu
+              </NavLink>
+            </li>
+            <li className="nav-item">
+              <NavLink to="/ordina" className="nav-link" onClick={() => document.querySelector('#mainNav').classList.remove('show')}>
+                Ordina
+              </NavLink>
+            </li>
+            <li className="nav-item">
+              <a
+                className="nav-link"
+                href="#therealfooter"
+                onClick={() => document.querySelector('#mainNav').classList.remove('show')}
+              >
+                Contatti
+              </a>
+            </li>
           </ul>
         </div>
       </div>
