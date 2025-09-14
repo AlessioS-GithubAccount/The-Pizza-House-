@@ -4,6 +4,8 @@ import Menu from './pages/Menu.jsx'
 import Order from './pages/Order.jsx'
 import Navbar from './components/Navbar.jsx'
 import Footer from './components/Footer.jsx'
+import Register from './pages/Register.jsx'
+import Login from './pages/Login.jsx'
 
 export default function App() {
   return (
@@ -14,6 +16,8 @@ export default function App() {
           <Route path="/" element={<Home />} />
           <Route path="/menu" element={<Menu />} />
           <Route path="/ordina" element={<Order />} />
+          <Route path="/register" element={<Register />} /> 
+          <Route path="/login" element={<Login />} />
         </Routes>
       </main>
       <Footer />
