@@ -2,6 +2,7 @@
 .registerPage {
   max-width: 520px;
   margin: 0 auto;
+  margin-top: 5rem !important;
   padding: 40px 20px;
   border-radius: 12px;
   background-color: rgba(0, 0, 0, 0.5); /* leggero effetto card */
@@ -12,6 +13,7 @@
 /* Titolo */
 .registerTitle {
   text-align: center;
+  margin-top: 0.5rem;
   margin-bottom: 24px;
   font-family: 'Bebas Neue', sans-serif;
   font-size: 2.5rem;

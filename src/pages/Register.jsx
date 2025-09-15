@@ -29,8 +29,8 @@ export default function Register() {
   }
 
   return (
-    <div className={styles.registerPage}>
-      <h1 className={styles.registerTitle}>Crea account</h1>
+    <div className={`registerPage ${styles.registerPage}`}>
+      <h1 className={`registerTitle ${styles.registerTitle}`}>Crea account</h1>
 
       {error && <div className={styles.errorAlert}>{error}</div>}
 
