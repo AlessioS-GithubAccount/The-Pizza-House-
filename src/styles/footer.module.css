@@ -1,0 +1,83 @@
+/* ===== Footer wrapper ===== */
+.footerRoot {
+  margin-top: 64px;
+  background-color: #8C2703;
+  color: white;
+  box-shadow: 0 0 3px 3px lightgray;
+  position: relative;
+  overflow: hidden;
+}
+
+.videoBackground {
+  position: relative;
+}
+
+.backgroundVideo2 {
+  width: 100%;
+  height: auto;
+  z-index: -1;
+}
+
+/* ===== Sections inside footer ===== */
+.whereWeAre {
+  text-align: left;
+  color: antiquewhite;
+}
+
+.footerSectionTitle {
+  color: antiquewhite;
+  text-align: center;
+  font-size: 3rem;
+  margin-top: 12vh;
+}
+
+/* ===== Social bar ===== */
+.buttonbarSocial {
+  width: 100%;
+  display: block;
+  text-align: center;
+}
+
+.therealfooter {
+  display: flex;
+  justify-content: center;
+  align-items: center;
+}
+
+.socialIcons {
+  display: flex;
+  gap: 10px;
+  justify-content: center;
+  padding-left: 0;
+  list-style: none;
+}
+
+.socialIcons li {
+  display: inline-block;
+  font-size: 3vw;
+  margin-right: 70px;
+}
+
+.socialIcons a {
+  text-decoration: none;
+  color: antiquewhite;
+  transition: color 0.3s ease;
+}
+
+.socialIcons a:hover {
+  color: rgb(244, 0, 0);
+}
+
+/* Address / credits */
+.address {
+  margin-top: 48px;
+  text-align: center;
+}
+
+/* Map size for small screens */
+@media screen and (max-width: 600px) {
+  .mapAdress {
+    width: 22.81em;
+    height: 18.13em;
+  }
+}

@@ -1,0 +1,71 @@
+/* Wrapper principale */
+.registerPage {
+  max-width: 520px;
+  margin: 0 auto;
+  padding: 40px 20px;
+  border-radius: 12px;
+  background-color: rgba(0, 0, 0, 0.5); /* leggero effetto card */
+  color: antiquewhite;
+  box-shadow: 0 0 20px rgba(0, 0, 0, 0.3);
+}
+
+/* Titolo */
+.registerTitle {
+  text-align: center;
+  margin-bottom: 24px;
+  font-family: 'Bebas Neue', sans-serif;
+  font-size: 2.5rem;
+  color: antiquewhite;
+}
+
+/* Form e campi */
+.registerForm {
+  display: flex;
+  flex-direction: column;
+  gap: 20px;
+}
+
+.formGroup {
+  display: flex;
+  flex-direction: column;
+}
+
+.formLabel {
+  font-weight: 600;
+  margin-bottom: 6px;
+  color: antiquewhite;
+}
+
+/* Pulsante submit */
+.submitBtn {
+  background-color: #c1922e;
+  border: none;
+  padding: 12px;
+  border-radius: 8px;
+  font-weight: bold;
+  color: #fff;
+  transition: background-color 0.3s ease;
+}
+.submitBtn:hover {
+  background-color: #a77c1b;
+}
+
+/* Alert errore */
+.errorAlert {
+  background-color: rgba(255, 0, 0, 0.1);
+  border: 1px solid red;
+  color: red;
+  padding: 10px;
+  border-radius: 6px;
+  text-align: center;
+}
+
+/* Responsiveness */
+@media screen and (max-width: 600px) {
+  .registerPage {
+    padding: 24px 16px;
+  }
+  .registerTitle {
+    font-size: 2rem;
+  }
+}

@@ -1,939 +1,102 @@
+/* Google Fonts (global, una sola volta) */
 @import url('https://fonts.googleapis.com/css2?family=Bebas+Neue&family=Pacifico&family=Roboto&family=Titillium+Web&display=swap');
 
+:root{
+  /* colori base */
+  --bg: rgb(22,22,22);
+  --fg: antiquewhite;
+  --text: antiquewhite;
+  --brand: #8C2703;
+  --accent: #c1922e;
+  --danger: #ff4d4f;
 
-body {
-    margin: 0;
-    padding: 0;
-    border: 0;
-    font-family: 'Titillium Web', sans-serif;
-    background-color: rgba(22, 22, 22);
+  /* tipografia & raggi */
+  --font-sans: 'Titillium Web', system-ui, -apple-system, Roboto, Arial, sans-serif;
+  --font-display: 'Bebas Neue', system-ui, -apple-system, Roboto, Arial, sans-serif;
+  --radius: 12px;
 }
 
-/* dropdown card carrello */
-/* The container <div> - needed to position the dropdown content */
-.dropdown {
-    position: relative;
-    display: inline-block;
-  }
-  
-  /* Dropdown Content (Hidden by Default) */
-  .dropdown-content {
-    display: none;
-    position: absolute;
-    background-color: #f1f1f1;
-    min-width: 160px;
-    height: 50px;
-    box-shadow: 0px 8px 16px 0px rgba(0,0,0,0.2);
-    z-index: 1;
-  }
-  
-  /* Links inside the dropdown */
-  .dropdown-content a {
-    color: black;
-    padding: 12px 16px;
-    text-decoration: none;
-    display: block;
-  }
-  
-  /* Change color of dropdown links on hover */
-  .dropdown-content a:hover {background-color: #ddd;}
-  
-  
-  /* Show the dropdown menu on hover */
-  .dropdown:hover .dropdown-content {display: block;}
-  
-  /* Change the background color of the dropdown button when the dropdown content is shown */
-  .dropdown:hover .dropbtn {background-color: #3e8e41;}
-
-  .custom-dropdown-content {
-    /* Altri stili del contenuto della finestrella */
-    padding: 8px;
-    width: 100%;
-
-    /* Imposta l'altezza massima e aggiungi la barra di scorrimento */
-    max-height: 400px; /* Modifica l'altezza massima secondo le tue preferenze */
-    overflow-y: auto;
-    /* Aggiungi qui gli stili desiderati */
-  }
-  
-/* css navbar generale */
-
-.container-fluid{
-    padding-left: 4vw;
-    text-align: center;
+/* (opzionale) variante chiara */
+[data-theme="light"]{
+  --bg: #ffffff;
+  --fg: #111111;
+  --text: #111111;
 }
 
-#background-video{
-    width: 100%;
-    height: auto;
-    z-index: -1;
+
+/* base */
+html, body, #root { height: 100%; }
+* { box-sizing: border-box; }
+
+body{
+  margin: 0;
+  padding: 0;
+  border: 0;
+  font-family: var(--font-sans);
+  background-color: var(--bg);
+  color: var(--text);
 }
 
-#background-video2{
-    width: 100%;
-    height: auto;
-    z-index: -1;
+/* tipografia di base */
+h1,h2,h3,h4{
+  font-family: var(--font-display);
+  color: var(--fg);
+  margin: 0 0 .5rem 0;
 }
-
-.navbar {
-background-color: rgba(22, 22, 22, 0.95 ) !important; 
-}
-
-/* css  dei bottoni dentro id="navbarNavDropdown" */
-#logoPage{
-    margin-left: 2vw;
-}
-.nav-item{
-    margin-right: 4vw;
-}
-.navbar-nav {
-    margin-left: auto;
-    padding-right: 4vw;
-}
-
-.navbar-nav .nav-link {
-    color: rgb(191, 45, 45) !important;
-    font-weight: 600; /* Semibold */
-    text-decoration: none;
-}
-
-.navbar-nav .nav-link:hover {
-    color: antiquewhite !important;
-    font-weight: 600; /* Semibold */
-}
-
-/* css del nome del sito */
-.navbar-brand {
-    color: antiquewhite !important;
-    font-size: 2.5em;
-    font-weight: 600; /* Semibold */
-    text-decoration: none;
-    padding-left: 26vw;
-}
-
-a.navbar-brand{
-    margin-right: auto;
-}
-
-.navbar-brand:hover {
-    color: antiquewhite !important;
-    font-weight: 600; /* Semibold */
-    text-decoration: none;
-}
-
-.navbar-brand{
-    margin-left: 2vw;
-}
-
-/* dropdown menu */
-.dropdown-menu{
-    background-color:  rgba(22, 22, 22, 0.95 );
-}
-
-.dropdown-menu button{
-    color: rgb(191, 45, 45) !important;
-    font-weight:bold;
-
-}
-
-h1,
-h2,
-h3,
-h4 {
-    font-family: 'Bebas Neue', sans-serif;
-    color: antiquewhite;
-}
-
-h2 {
-    font-size: 3rem;
-}
+h2{ font-size: 3rem; }
 
 p{
-    font-family: 'Titillium Web', sans-serif;
-    color: antiquewhite;
+  font-family: var(--font-sans);
+  color: var(--text);
+  margin: 0 0 1rem 0;
 }
 
-
-header {
-    width: 100%;
-    height: 100%;
-    color: #ffffff;
-
-    text-shadow: 0 0 4px black;
-    margin-top: 48px;
-    position: relative; 
+/* link globali */
+a{
+  color: #730217;
+  text-decoration: none;
+}
+a:hover{
+  color: #c80125;
+  text-decoration: underline;
 }
 
-header h1 {
-    font-size: 6rem;
-    margin: 0;
-    position: absolute; 
-    top: 30%; 
-    left: 50%; 
-    transform: translate(-50%, -50%); 
+/* utilità globali riusabili (NON legate a componenti specifici) */
+.visually-hidden{
+  position: absolute !important;
+  width: 1px; height: 1px;
+  padding: 0; margin: -1px; overflow: hidden;
+  clip: rect(0,0,0,0); white-space: nowrap; border: 0;
 }
 
-header p {
-    font-family: 'Pacifico', cursive;
-    font-size: 2rem;
-    margin: 0;
-    position: absolute; 
-    top: 50%; 
-    left: 50%; 
-    transform: translate(-50%, -50%); 
-}
-
-div.card-image > img {
-        width: 100%; 
-        height: auto; 
-}
-
-/* css bio */
-section#bio{
-    color: antiquewhite;
-    text-align: center;
-}
-
-
-#LogoBio{
-    width: 20%;
-    text-align: center;
-}
-
-.LogoBioClass{
-    display: flex;
-    justify-content: center;
-    align-items: center;
-    margin-bottom: 32px;
-}
-
-.alignBio{
-    
-    text-align: center;
-}
-
-.titleBio{
-    text-align: center;
-    margin-bottom: 64px;
-    margin-top: 32px;
-}
-
-.bio p {
-    width: 80%;
-    color: antiquewhite;
-    margin-top: 20px;
-}
-
-.col p{
-    margin-top: 32px;
-    margin-bottom: 52px;
-}
-
-.registerbtn {
-  display: inline-block;            /* per centrarlo facilmente */
-  background-color: black;          /* sfondo nero */
-  color: white;                     /* testo bianco */
-  border: 2px solid white;          /* bordo bianco */
-  border-radius: 20px;              /* angoli arrotondati */
-  padding: 12px 24px;               /* spazio interno */
-  font-weight: 600;
-  text-align: center;               /* testo centrato */
-  cursor: pointer;                  /* cursore mano */
-  transition: all 0.3s ease;        /* transizione per hover */
-}
-
-.registerbtn:hover {
-  box-shadow: 0 0 12px 2px red;     /* alone rosso all’hover */
-  background-color: #111;           /* leggero scurimento */
-  color: white;
-}
-
-.separator2{
-    margin-top: 0.5rem;
-}
-
-.alignBio {
-    text-align: center; /* Allinea il testo al centro */
-  }
-
-
-/* Mantiene rapporto 16:9 anche con <img> */
-.aspect-16-9 { position: relative; width:70%; }
-.aspect-16-9::before { content: ""; display: block; padding-top: 56.25%; } /* 16:9 */
-
-.video-card__media {
-  position: absolute; inset: 0;
-  width: 85%; height: 85%;
-  object-fit: cover; display: block;
-}
-
-
-/* Spaziature bio più compatte e centrate */
-.alignBio p {
-  max-width: 800px;
-  margin: 16px auto;
+.section-title{
+  color: var(--fg);
   text-align: center;
+  font-size: 3rem;
+  margin-top: 12vh;
 }
 
-  
-  .alignBio p {
-    display: inline-block; /* Impedisce al paragrafo di occupare l'intera larghezza del contenitore */
-    text-align: left; /* Allinea il testo del paragrafo a sinistra */
-    max-width: 800px; /* Imposta una larghezza massima per il paragrafo, regola secondo necessità */
-    margin: 0 auto; /* Centra il paragrafo orizzontalmente */
-    margin-top: 32px;
-}
-  
-#imgbw{
-    width: 60%;
-    display: block;
-    margin: 0 auto;
-    text-align: center;
-}
-
-.containerRicetta{
-    width: 100%;
-    margin-top: 150px;
-}
-
-#farine{
-    width: 90%;
-}
-
-#pizzeriaImg{
-width: 70%;
-}
-
-/* Ordina subito */
-fieldset{
-    color: antiquewhite;
-}
-
-
-#Ordina{
-    margin-top: 8vh;
-}
-
-.border {
-    width: fit-content;
-    border: 4px solid white;
-    border-radius: 20px;
-}
-
-.order-column {
-    margin-right: 100px;
-}
-
-#imgmenu{
-    padding: 50px;
-    width: 120%;
-    height: auto;
-}
-
-/* menu section */
-.btn-primary{
-    background-color: rgba(0, 0, 0, 0);
-    border-color:orange;
-    color: black;
-}
-
-.btn-primary:active {
-    background-color: rgba(0, 0, 0, 0);
-}
-
-#pizzeClassiche, #primi, #dessert{
-    margin-top: 4vh;
-    margin-bottom: 2vh;
-    color: black;
-}
-
-.card-text{
-    color: black;
-}
-
-.card-body{
-    padding-bottom: 40px;
-}
-
-.btn-custom {
-    background-color: rgb(244, 0, 0, 0.4);
-    position: fixed;
-    bottom: 0;
-    width: 100%;
-    display: block;
-}
-
-.btn-custom:hover {
-    color: black;
-}
-
-.curtain{
-    height: 16vh;
-    display: flex;
-    justify-content: center;
-    align-items: center;
-    background-color: rgba(244, 0, 0, 0);
-    border-color:orange;
-    text-decoration: none;
-    color: black;
-}
-
-
-
-.curtain:hover{
-    height: 16vh;
-    display: flex;
-    justify-content: center;
-    align-items: center;
-    background-color: rgba(244, 0, 0, 0);
-    border-color:orange;
-    text-decoration: none;
-    color: black;
-}
-
-.card-body{
-    background-color: rgba(0, 0, 0, 0);
-    color: black;
-}
-
-.pb-2{
-    display: flex;
-    justify-content: center;
-    align-items: center;
-
-}
-
-section#menu ul {
-    display: flex;
-    flex-wrap: wrap;
-    padding-left: 0;
-    gap: 16px;
-}
-
-/* contenitore esterno: piena larghezza fino a 920px */
-.video-card {
-  max-width: 920px;
-  width: 100%;
+.separator{
+  width: 100px;
+  height: 4px;
+  background-color: var(--accent);
   margin: 0 auto;
 }
 
-/* bordo bianco elegante */
-.video-border {
-  display: block;
-  width: 100%;
-  padding: 8px;
-  border: 3px solid #fff;
-  border-radius: 24px;
-  background-color: rgba(255,255,255,0.06);
-  box-shadow: 0 0 20px rgba(255,255,255,0.25);
+/* tabelle “plain” (se NON usi .table di Bootstrap) */
+table{
+  border: 1px solid lightgray;
+  width: 80%;
+  border-collapse: collapse;
+}
+table td, table th{
+  padding: 4px;
+  text-align: left;
+}
+table th{
+  background-color: white;
+  color: var(--brand);
 }
 
-/* rapporto 16:9 per il contenuto ridotto del 15 % */
-.video-card__inner {
-  position: relative;
-  width: 85%;                 /* <-- 15% più piccolo */
-  margin: 0 auto;             /* centra orizzontalmente */
-  border-radius: inherit;
-  overflow: hidden;
-  background: rgba(0,0,0,0.35);
-}
-.video-card__inner::before {
-  content: "";
-  display: block;
-  padding-top: 56.25%;        /* mantiene il 16:9 */
-}
-
-/* immagine/gif a copertura del box interno */
-.video-card__media {
-  position: absolute;
-  inset: 0;
-  width: 100%;
-  height: 100%;
-  object-fit: cover;
-  display: block;
-}
-
-
-.container-menu h3, h2 {
-    text-shadow: 1px 1px 0 #000;
-}
-
-
-
-.curtain {
-  position: relative;
-  overflow: hidden;
-  border: none;
-  padding: 15px 30px;
-  font-size: 18px;
-  cursor: pointer;
-  background: transparent;
-  color: #fff;
-}
-
-section#menu ul li {
-    border: 1px solid #cccccc;
-    border-radius: 5px;
-    height: 150px;
-    width: 280px;
-    list-style-type: none;
-    padding: 8px;
-    box-shadow: 1px 1px 2px lightgray;
-}
-
-section#contacts{
-    color: antiquewhite;
-}
-
-#formOrdina{
-    color: rgb(255, 255, 255);
-}
-
-.border {
-    border: 30px;
-    border-color: #c1922e;
-}
-
-.titleTablet{
-    margin-bottom: 50px;
-}
-
-.rowContacts{
-    width: 50%;
-}
-
-.rowOrdinaSubito{
-    width: 100%;
-}
-
-
-#pizzamenu{
-    width: 90%;
-}
-
-
-
-/* orari apertura */
-#containerOrari {
-    width: 100%;
-    height: 50vh;
-    background-size: cover;
-    font-family: 'Titillium Web', sans-serif;
-    color: antiquewhite;
-    border: 3px white;
-    margin-top: 50px;
-    display: flex;
-    align-items: center; /* Centra verticalmente */
-    justify-content: center; /* Centra orizzontalmente */
-    position: relative;
-    text-align: center;
-}
-
-#containerOrari::before {
-    content: '';
-    position: absolute;
-    top: 0;
-    right: 0;
-    bottom: 0;
-    left: 0;
-    background-image: url(./images/Menù-Pizzeria_Bianco-e-Nero-2-1024x731.jpg);
-    background-size: cover;
-    filter: blur(3px);
-}
-
-#tabOrari {
-    position: relative;
-    z-index: 1;
-    font-family: 'Titillium Web', sans-serif;
-    color: white;
-    border: 3px white;
-}
-
-#tabOrari h1,
-#tabOrari h2,
-#tabOrari h3,
-#tabOrari h4,
-#tabOrari h5 {
-  margin-bottom: 30px;
-}
-
-footer {
-    margin-top: 64px;
-    background-color: #8C2703;
-    color: white;
-    box-shadow: 0 0 3px 3px lightgray;
-}
-
-footer section {
-    padding: 32px;
-}
-
-table {
-    border: 1px solid lightgray;
-    width: 300px;
-}
-
-table td, table th {
-    padding: 4px;
-    text-align: left;
-}
-
-table th {
-    background-color: white;
-    color: #8C2703;
-}
-
-
-.container {
-    max-width: 900px;
-    margin: 0 auto;
-    margin-top: 64px;
-}
-
-.container section {
-    margin-top: 64px;
-    margin-bottom: 32px;
-}
-
-.section-title {
-    color: antiquewhite;
-    text-align: center;
-    font-size: 3rem;
-    margin-top: 12vh;
-}
-
-.where-we-are {
-    text-align: left;
-}
-
-
-#falseHeader{
-    width: 100%;
-    height: 2vh;
-}
-
-#falseHeader2{
-    width: 100%;
-    height: 5vh;
-}
-
-#falseHeader3{
-    width: 100%;
-    height: 12vh;
-}
-
-section.contacts {
-    color: antiquewhite;
-}
-
-.separator {
-    width: 100px;
-    height: 4px;
-    background-color: #c1922e;
-    margin: 0 auto;
-}
-
-.mbBio{
-    margin-bottom: 32px;
-}
-
-.mbBio2{
-    margin-top: 32px;
-}
-
-.Sepatator-mg{
-    margin-bottom: 50px;
-}
-
-.menu h3 {
-    font-size: 1.5em;
-}
-
-a {
-    color: #730217;
-    text-decoration: none;
-}
-
-a:hover {
-    color: #c80125;
-    text-decoration: underline;
-}
-
-footer {
-    background-color: #8c270300;
-    color: white;
-}
-
-.videoBackground{
-    background-image: url(./images/pizza\ video-background\ map.mp4);
-    padding: 30px;
-}
-
-table {
-    border: 1px solid lightgray;
-    width: 80%;
-}
-
-table td, table th {
-    padding: 4px;
-    text-align: left;
-}
-
-table th {
-    background-color: white;
-    color: #8C2703;
-}
-
-input[type="submit"] {
-    margin: 8px 0;
-    background-color: #00000000;
-    border: 0;
-    border-radius: 5px;
-    padding: 8px;
-    color: white;
-}
-
-/* footer2 */
-.footer2 {
-    width: 100%;
-    height: auto;
-    color: antiquewhite;
-}
-
-.buttonbar-social{
-    width: 100%;
-    display: block;
-    text-align: center;
-}
-
-.social-icons {
-    display: flex;
-    gap: 10px;
-}
-
-.social-icons li {
-    display: inline-block;
-    font-size: 3vw;
-    margin-right: 70px;
-}
-
-.social-icons a {
-    text-decoration: none;
-    color: antiquewhite; 
-}
-
-.social-icons a:hover {
-    color: rgb(244, 0, 0);
-}
-
-#therealfooter {
-    display: flex;
-    justify-content: center;
-    align-items: center;
-}
-
-.address{
-    margin-top: 48px;
-    text-align: center ;
-}
-
-/* Stili per schermi di dimensioni fino agli smartphone più diffusi al momento */
-@media screen and (max-width: 600px) {
-    /* Altre regole CSS per gli smartphone... */
-
-    /* Navbar generale */
-    .navbar {
-        height: 100px;  
-    }
-
-    /* Pannello di collapse (burger menu) */
-    .navbar-collapse {
-        background-color: rgba(22, 22, 22, 0.95); /* Stesso colore della navbar */
-    }
-
-   /* Navbar generale */
-.navbar {
-    background-color: rgba(22, 22, 22, 0.95) !important;
-}
-
-/* Logo */
-#logoPage {
-    width: 60px; /* Regola la larghezza del logo per adattarsi meglio ai dispositivi mobili */
-}
-
-/* Navbar Brand */
-.navbar-brand {
-    font-size: 1.5rem; /* Riduci la dimensione del testo per adattarsi meglio ai dispositivi mobili */
-    padding-left: 70px;
-    text-align: center;
-}
-
-/* Toggle button */
-.navbar-toggler {
-    background-color: rgba(22, 22, 22, 0.95); /* Adatta il colore del pulsante di toggle */
-}
-
-/* Navbar links */
-.navbar-nav .nav-link {
-    color: rgb(191, 45, 45) !important;
-    font-weight: 600;
-    text-decoration: none;
-}
-}
-
-
-
-/* Altezza della navbar su schermi più piccoli */
-@media screen and (max-width: 600px) {
-    .navbar {
-        height: 60px; /* Regola l'altezza della navbar per adattarsi meglio ai dispositivi mobili */
-    }
-    
-    .navbar-brand {
-        text-align: center;
-        font-size: 1.2em;
-        padding-left: 0;
-    }
-    
-    .navbar-toggler {
-        margin-right: 0;
-    }
-
-    .navbar-nav {
-        margin-left: 0;
-        margin-right: 0;
-    }
-    
-    .nav-link {
-        text-align: center;
-    }
-
-    .navbar-toggler {
-        margin-right: 50px; /* Sposta verso sinistra di 50px */
-    }
-
-}
-
-
-/* Stili per schermi da smartphone più diffusi a tablet più diffusi */
-@media screen and (min-width: 601px) and (max-width: 1024px) {
-    /* Altre regole CSS per tablet... */
-
-    /* Navbar generale */
-    .navbar {
-        height: 100px;  
-    }
-
-    /* Pannello di collapse (burger menu) */
-    .navbar-collapse {
-        background-color: rgba(22, 22, 22, 0.95); /* Stesso colore della navbar */
-    }
-}
-
-
-
-/* Dimensioni schermo fino agli smartphone più diffusi al momento */
-@media screen and (max-width: 600px) {
-    /* Inserisci qui le regole CSS per gli smartphone */
-    .navbar {
-        height: 100px;  
-
-        position: fixed; /* Fissa la navbar */
-        top: 0; /* Allinea la navbar con il bordo superiore dello schermo */
-        width: 100%; /* Occupa l'intera larghezza dello schermo */
-        z-index: 1000;
-    }
-
-    .navbar-brand{
-        margin-left: 12vw;
-    }
-
-       
-    header h1 {
-        margin-top: 50px;
-        font-size: 4rem;
-    }
-
-    header p {
-        color: white;
-        font-family: 'Pacifico', cursive;
-        font-size: 1.5rem;
-    }
-
-    header {
-        height: 500px;
-        padding-top: 100px;
-    }
-
-    .section-title {
-        font-size: 2.5em;
-    }
-
-    header h1 {
-        font-size: 2em; /* Adatta la dimensione del carattere in base alla dimensione del body */
-    }
-    
-    header p {
-        font-size: 0.8em; /* Adatta la dimensione del carattere in base alla dimensione del body */
-        color: #ffffff;
-        margin-top: 20px;
-      
-    }
-    
-    .background-video{
-  
-        height: 100%;
-    }
-
-    header {
-        position: relative;
-        text-align: center;
-        overflow: hidden;
-    }
-    
-    #background-video {
-        width: 100%;
-        height: 100%;
-        object-fit: cover; /* Applica l'effetto di copertura al video */
-    }
-
-    .containerSmartphone{
-        padding-top: 0;
-    }
-
-    .mapAdress{
-        width: 22.81em ;
-        height: 18.13em;
-    }
-    
-
-}
-
-
-
-/* Dimensioni schermo da smartphone più diffusi a tablet più diffusi */
-@media screen and (min-width: 601px) and (max-width: 1024px) {
-    /* Inserisci qui le regole CSS per tablet */
-    header h1 {
-        margin-top: 42px;
-        font-size: 4rem;
-    }
-
-    header p {
-        color: white;
-        font-family: 'Pacifico', cursive;
-        font-size: 1.5rem;
-    }
-
-    header {
-        height: 350px;
-    }
-
-    .section-title {
-        font-size: 2.5em;
-    }
-
-    
-}
-
-
+/* elementi HTML generici che possono apparire ovunque */
+fieldset{ color: var(--fg); }
