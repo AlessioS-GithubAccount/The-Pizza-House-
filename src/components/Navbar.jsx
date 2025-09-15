@@ -6,14 +6,17 @@ export default function Navbar() {
     <nav className={`navbar navbar-dark bg-dark fixed-top ${styles.navRoot}`}>
       <div className={`container-fluid ${styles.navContainer}`}>
         {/* Logo + brand */}
-        <Link to="/" className={`navbar-brand d-flex align-items-center ${styles.brand}`}>
-          <img
-            src="/images/pizza-logo-E6DE845BD3-seeklogo.com.png"
-            alt="Logo"
-            className={styles.logoPage}
-          />
-          <span className="ms-2">THE PIZZA HOUSE</span>
-        </Link>
+       <div className={`mx-auto d-flex align-items-center ${styles.brandWrapper}`}>
+          <Link to="/" className={`navbar-brand d-flex align-items-center ${styles.brand}`}>
+            <img
+              src="/images/pizza-logo-E6DE845BD3-seeklogo.com.png"
+              alt="Logo"
+              className={styles.logoPage}
+            />
+            <span className={`ms-2 ${styles.brand}`}>THE PIZZA HOUSE</span>
+          </Link>
+        </div>
+
 
         {/* Burger button */}
         <button

@@ -63,8 +63,8 @@
 .registerbtn {
   display: inline-block;
   background-color: black;
-  color: white;
-  border: 2px solid white;
+  color: white !important;
+  border: 2px solid white !important;
   border-radius: 20px;
   padding: 12px 24px;
   font-weight: 600;
@@ -73,9 +73,9 @@
   transition: all 0.3s ease;
 }
 .registerbtn:hover {
-  box-shadow: 0 0 12px 2px red;
-  background-color: #111;
-  color: white;
+  box-shadow: 0 0 16px 2px rgb(0, 0, 0, 0.5);
+  background-color: #fbfbfb !important;
+  color: rgb(0, 0, 0) !important;
 }
 
 .separator { width: 100px; height: 4px; background-color: #c1922e; margin: 0 auto; }

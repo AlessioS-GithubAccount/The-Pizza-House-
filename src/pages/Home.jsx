@@ -49,7 +49,7 @@ export default function Home() {
           <div className="text-center mt-4">
             <Link
               to="/register"
-              className={`${styles.registerbtn} btn btn-warning btn-lg shadow`}
+              className={`${styles.registerbtn} btn btn-lg `}
               role="button"
             >
               Diventa nostro cliente!
