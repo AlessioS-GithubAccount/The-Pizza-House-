@@ -10,6 +10,7 @@ function signAccessToken(payload) {
   return jwt.sign(payload, JWT_SECRET, { expiresIn: JWT_EXPIRES });
 }
 
+// post effettua una registrazione user (verifica campi, email lowercase-trim, hashPassword, verifica JWT)
 authRouter.post('/register', async (req, res) => {
   try {
     const { full_name, email, password, phone } = req.body || {};
@@ -36,6 +37,8 @@ authRouter.post('/register', async (req, res) => {
   }
 });
 
+
+//post effettua una login user (verifica campi inseriti con record db/users, presenza row-account, attivazione token)
 authRouter.post('/login', async (req, res) => {
   try {
     const { email, password } = req.body || {};
