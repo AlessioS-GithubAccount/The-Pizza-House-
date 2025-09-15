@@ -1,6 +1,7 @@
 import { useState } from 'react';
 import { api } from '../lib/api';
 import { Link } from 'react-router-dom';
+import styles from '../styles/login.module.css';
 
 export default function Login() {
   const [email, setEmail] = useState('');
@@ -27,24 +28,42 @@ export default function Login() {
   }
 
   return (
-    <div className="container py-5" style={{ maxWidth: 520 }}>
-      <h1 className="text-center mb-4">Accedi</h1>
-      {error && <div className="alert alert-danger">{error}</div>}
-      <form onSubmit={handleSubmit}>
-        <div className="mb-3">
-          <label className="form-label">Email</label>
-          <input type="email" className="form-control" value={email}
-                 onChange={e => setEmail(e.target.value)} required />
+    <div className={styles.loginPage}>
+      <h1 className={styles.loginTitle}>Accedi</h1>
+      {error && <div className={styles.errorAlert}>{error}</div>}
+
+      <form onSubmit={handleSubmit} className={styles.loginForm}>
+        <div className={styles.formGroup}>
+          <label className={styles.formLabel}>Email</label>
+          <input
+            type="email"
+            className="form-control"
+            value={email}
+            onChange={e => setEmail(e.target.value)}
+            required
+          />
         </div>
-        <div className="mb-3">
-          <label className="form-label">Password</label>
-          <input type="password" className="form-control" value={password}
-                 onChange={e => setPassword(e.target.value)} required />
+
+        <div className={styles.formGroup}>
+          <label className={styles.formLabel}>Password</label>
+          <input
+            type="password"
+            className="form-control"
+            value={password}
+            onChange={e => setPassword(e.target.value)}
+            required
+          />
         </div>
-        <button type="submit" className="btn btn-primary w-100" disabled={loading}>
+
+        <button
+          type="submit"
+          className={`btn btn-primary w-100 ${styles.submitBtn}`}
+          disabled={loading}
+        >
           {loading ? 'Accesso…' : 'Accedi'}
         </button>
-        <p className="text-center mt-3">
+
+        <p className={styles.registerLink}>
           Non hai un account? <Link to="/register">Registrati</Link>
         </p>
       </form>
