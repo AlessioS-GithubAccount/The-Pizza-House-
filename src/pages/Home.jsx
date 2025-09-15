@@ -1,15 +1,26 @@
+import { Link } from 'react-router-dom';
+
 export default function Home() {
   return (
     <>
       {/* HERO */}
-      <header className="position-relative" >
-        <video id="background-video" autoPlay loop muted playsInline
-               poster="/images/10372997_4464061.jpg"
-               className="position-absolute top-0 start-0 w-100 h-100"
-               style={{ objectFit: 'cover' }}>
+      <header className="position-relative">
+        <video
+          id="background-video"
+          autoPlay
+          loop
+          muted
+          playsInline
+          poster="/images/10372997_4464061.jpg"
+          className="position-absolute top-0 start-0 w-100 h-100"
+          style={{ objectFit: 'cover' }}
+        >
           <source src="/images/production_id_4457933 (2160p).mp4" type="video/mp4" />
         </video>
-        <div className="position-absolute top-0 start-0 w-100 h-100" style={{ background: 'rgba(0,0,0,0.35)' }} />
+        <div
+          className="position-absolute top-0 start-0 w-100 h-100"
+          style={{ background: 'rgba(0,0,0,0.35)' }}
+        />
         <div className="container position-relative text-white d-flex flex-column justify-content-center align-items-start" style={{ minHeight: '90vh' }}>
           <h1 className="display-3 fw-bold">The Pizza House</h1>
           <p className="lead">Real Italian Experience</p>
@@ -18,7 +29,6 @@ export default function Home() {
 
       {/* BIO */}
       <main className="container containerSmartphon">
-        
         <section className="bio py-4">
           <div className="LogoBioClass">
             <img id="LogoBio" src="/images/pizza-logo-E6DE845BD3-seeklogo.com.png" alt="Logo" />
@@ -31,41 +41,36 @@ export default function Home() {
             i primi piatti ricchi di sapore e i dessert, a casa tua o nel nostro locale.
           </p>
 
-          {/* Nuovo bottone Registrazione */}
-        <div className="text-center mt-4">
-        <button
-            type="button"
-            className="registerbtn btn btn-warning btn-lg shadow"
-               onClick={() => alert('Funzione registrazione in arrivo!')}
-        >
-            Diventa nostro cliente!
-        </button>
-        </div>
-        
+          {/* Link con aspetto di bottone */}
+          <div className="text-center mt-4">
+            <Link
+              to="/register"
+              className="registerbtn btn btn-warning btn-lg shadow"
+              role="button"
+            >
+              Diventa nostro cliente!
+            </Link>
+          </div>
 
-        <div className="alignBio">
+          <div className="alignBio">
             <div className="separator mbBio2" />
             <h2 className="titleBio">La nostra storia.</h2>
 
             {/* CARD VIDEO con bordo gradiente */}
-           <div className="video-card mx-auto">
-            <div className="video-border">
+            <div className="video-card mx-auto">
+              <div className="video-border">
                 <div className="video-card__inner aspect-16-9">
-                <img
+                  <img
                     className="video-card__media"
                     src="/images/loopPizza.gif"
                     alt="Loop pizza"
                     loading="lazy"
                     decoding="async"
-                />
+                  />
                 </div>
+              </div>
             </div>
-            </div>
-
-
-
-            </div>
-
+          </div>
         </section>
 
         {/* RICETTA / IMMAGINI */}
@@ -76,8 +81,8 @@ export default function Home() {
                 <h4>La nostra pizza segue la ricetta della tradizione.</h4>
                 <p>
                   Impasto semplice e materie prime selezionate; lievito madre tramandato; pomodori locali:
-                  il risultato è un gusto autentico.  Tradizione italiana, ingredienti freschi e forno a legna per momenti
-                indimenticabili di gusto e convivialità.
+                  il risultato è un gusto autentico. Tradizione italiana, ingredienti freschi e forno a legna
+                  per momenti indimenticabili di gusto e convivialità.
                 </p>
               </div>
               <div className="col">
@@ -114,5 +119,5 @@ export default function Home() {
         </div>
       </div>
     </>
-  )
+  );
 }
