@@ -2,6 +2,7 @@
 .loginPage {
   max-width: 520px;
   margin: 0 auto;
+  margin-top: 5rem !important;
   padding: 40px 20px;
   border-radius: 12px;
   background-color: rgba(0, 0, 0, 0.5);
@@ -42,7 +43,7 @@
   border: none;
   padding: 12px;
   border-radius: 8px;
-  font-weight: bold;
+  font-weight: bold !important;
   color: #fff;
   transition: background-color 0.3s ease;
 }

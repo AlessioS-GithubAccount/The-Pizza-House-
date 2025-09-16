@@ -57,7 +57,7 @@ export default function Login() {
 
         <button
           type="submit"
-          className={`btn btn-primary w-100 ${styles.submitBtn}`}
+          className={`btn btn-warning w-100 ${styles.submitBtn}`}
           disabled={loading}
         >
           {loading ? 'Accesso…' : 'Accedi'}

@@ -76,6 +76,8 @@
   box-shadow: 0 0 16px 2px rgb(0, 0, 0, 0.5);
   background-color: #fbfbfb !important;
   color: rgb(0, 0, 0) !important;
+  text-decoration: none;
+  font-weight: 600;
 }
 
 .separator { width: 100px; height: 4px; background-color: #c1922e; margin: 0 auto; }
@@ -85,37 +87,46 @@
 /* Video card */
 .videoCard {
   max-width: 920px;
-  width: 100%;
+  width: 30%;
   margin: 0 auto;
 }
+
+/* bordo quasi attaccato al video */
 .videoBorder {
   display: block;
   width: 100%;
-  padding: 8px;
-  border: 3px solid #fff;
+  padding: 2px;                  /* era 8px → ora 2px */
+  border: 0px solid #fff;
   border-radius: 24px;
   background-color: rgba(255, 255, 255, 0.06);
-  box-shadow: 0 0 20px rgba(255, 255, 255, 0.25);
 }
+
+/* il contenitore interno ora riempie quasi tutto,
+   lasciando solo i 2px di distacco */
 .videoCardInner {
   position: relative;
-  width: 85%;
+  width: calc(100% - 4px);       /* 2px per lato → 4px totali */
   margin: 0 auto;
   border-radius: inherit;
   overflow: hidden;
   background: rgba(0,0,0,0.35);
 }
+
 .aspect169::before {
   content: "";
   display: block;
   padding-top: 56.25%;
 }
+
 .videoCardMedia {
   position: absolute;
   inset: 0;
-  width: 100%; height: 100%;
-  object-fit: cover; display: block;
+  width: 100%;
+  height: 100%;
+  object-fit: cover;
+  display: block;
 }
+
 
 /* ===== Ricetta / immagini ===== */
 .containerRicetta {
