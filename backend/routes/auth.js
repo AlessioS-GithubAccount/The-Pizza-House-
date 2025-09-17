@@ -63,8 +63,6 @@ authRouter.post('/register', async (req, res) => {
   }
 });
 
-
-
 //post effettua una login user (verifica campi inseriti con record db/users, presenza row-account, attivazione token)
 authRouter.post('/login', async (req, res) => {
   try {
