@@ -1,7 +1,11 @@
+// index.js (tuo, aggiornato)
 import express from 'express';
 import cors from 'cors';
 import 'dotenv/config';
 import { authRouter } from './routes/auth.js';
+import { shopRouter } from './routes/shop.js';
+import { checkoutRouter } from './routes/checkout.js';
+import { ordersRouter } from './routes/orders.js';
 
 const app = express();
 
@@ -12,6 +16,9 @@ app.use(cors({
 app.use(express.json());
 
 app.use('/api/auth', authRouter);
+app.use('/api', shopRouter);
+app.use('/api', checkoutRouter);
+app.use('/api', ordersRouter);
 
 app.get('/health', (req, res) => res.json({ ok: true }));
 
