@@ -95,17 +95,17 @@
 .videoBorder {
   display: block;
   width: 100%;
-  padding: 2px;                  /* era 8px → ora 2px */
+  padding: 2px;                 
   border: 0px solid #fff;
   border-radius: 24px;
   background-color: rgba(255, 255, 255, 0.06);
 }
 
-/* il contenitore interno ora riempie quasi tutto,
+/* il contenitore interno riempie quasi tutto,
    lasciando solo i 2px di distacco */
 .videoCardInner {
   position: relative;
-  width: calc(100% - 4px);       /* 2px per lato → 4px totali */
+  width: calc(100% - 4px);       
   margin: 0 auto;
   border-radius: inherit;
   overflow: hidden;
@@ -151,7 +151,7 @@
 .containerOrari::before {
   content: '';
   position: absolute; inset: 0;
-  background-image: url('/images/Menù-Pizzeria_Bianco-e-Nero-2-1024x731.jpg'); /* usa /images se sta in public */
+  background-image: url('/images/Menù-Pizzeria_Bianco-e-Nero-2-1024x731.jpg'); 
   background-size: cover;
   filter: blur(3px);
 }
