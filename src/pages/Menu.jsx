@@ -1,5 +1,5 @@
 import React from 'react';
-import styles from '../styles/menu.module.css'; 
+import styles from '../styles/menu.module.css';
 
 const pizzas = [
   {
@@ -61,6 +61,27 @@ const pizzas = [
 ];
 
 export default function Menu() {
+  // salva il carrello in localStorage, somma quantità se la pizza è già presente
+  const handleAdd = (pizza) => {
+    const key = 'cart';
+    const raw = localStorage.getItem(key);
+    const cart = raw ? JSON.parse(raw) : [];
+
+    const idx = cart.findIndex((it) => it.id === pizza.name);
+    if (idx >= 0) {
+      cart[idx].qty += 1;
+    } else {
+      cart.push({
+        id: pizza.name,
+        name: pizza.name,
+        price: pizza.price,
+        img: pizza.img,
+        qty: 1,
+      });
+    }
+    localStorage.setItem(key, JSON.stringify(cart));
+  };
+
   return (
     <section className="container py-5">
       <h1 className="text-center mb-4">Il nostro Menu</h1>
@@ -87,14 +108,19 @@ export default function Menu() {
                 <p className="card-text flex-grow-1">{p.description}</p>
                 <div className="d-flex align-items-center justify-content-between mt-3">
                   <span className="fw-bold">€ {p.price.toFixed(2)}</span>
-                  <button className={`${styles.btnAdd} btn btn-sm`} type="button">
-                    Aggiungi  +
+                  <button
+                    className={`${styles.btnAdd} btn btn-sm`}
+                    type="button"
+                    onClick={() => handleAdd(p)}
+                  >
+                    Aggiungi +
                   </button>
                 </div>
               </div>
             </div>
           </div>
         ))}
+        {/* Spaziatore per allineamento su desktop */}
         <div className="col d-none d-lg-block" />
       </div>
     </section>
