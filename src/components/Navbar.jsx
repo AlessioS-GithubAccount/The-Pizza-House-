@@ -6,7 +6,7 @@ export default function Navbar() {
     <nav className={`navbar navbar-dark bg-dark fixed-top ${styles.navRoot}`}>
       <div className={`container-fluid ${styles.navContainer}`}>
         {/* Logo + brand */}
-       <div className={`mx-auto d-flex align-items-center ${styles.brandWrapper}`}>
+        <div className={`mx-auto d-flex align-items-center ${styles.brandWrapper}`}>
           <Link to="/" className={`navbar-brand d-flex align-items-center ${styles.brand}`}>
             <img
               src="/images/pizza-logo-E6DE845BD3-seeklogo.com.png"
@@ -17,19 +17,25 @@ export default function Navbar() {
           </Link>
         </div>
 
+        {/* Burger button + cart icon */}
+        <div className="d-flex align-items-center">
+          {/* icona carrello */}
+          <Link to="/cart" className={`nav-link ${styles.cartLink}`} aria-label="Carrello">
+            <i className="fa-solid fa-cart-shopping"></i>
+          </Link>
 
-        {/* Burger button */}
-        <button
-          className={`navbar-toggler ${styles.togglerMobile}`}
-          type="button"
-          data-bs-toggle="collapse"
-          data-bs-target="#mainNav"
-          aria-controls="mainNav"
-          aria-expanded="false"
-          aria-label="Toggle navigation"
-        >
-          <span className="navbar-toggler-icon"></span>
-        </button>
+          <button
+            className={`navbar-toggler ms-3 ${styles.togglerMobile}`}
+            type="button"
+            data-bs-toggle="collapse"
+            data-bs-target="#mainNav"
+            aria-controls="mainNav"
+            aria-expanded="false"
+            aria-label="Toggle navigation"
+          >
+            <span className="navbar-toggler-icon"></span>
+          </button>
+        </div>
 
         {/* Burger menu */}
         <div className={`collapse navbar-collapse ${styles.collapseBg}`} id="mainNav">
