@@ -5,7 +5,7 @@ import 'dotenv/config';
 import { authRouter } from './routes/auth.js';
 import { shopRouter } from './routes/shop.js';
 import { checkoutRouter } from './routes/checkout.js';
-import { ordersRouter } from './routes/orders.js';
+import { ordersRouter } from './routes/order.js';
 
 const app = express();
 
