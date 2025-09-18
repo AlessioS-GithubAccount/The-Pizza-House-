@@ -84,8 +84,8 @@ export default function Menu() {
 
   return (
     <section className="container py-5">
-      <h1 className="text-center mb-4">Il nostro Menu</h1>
-      <h3 className={`${styles.descr} text-center text-muted mb-5`}>
+      <h1 className={`${styles.menuTitle} text-center mb-4`}>Il nostro Menu</h1>
+      <h3 className={`${styles.descr} text-center mb-5`}>
         Otto pizze gourmet, stessa mano e stessa filosofia: ingredienti eccellenti,
         tecnica e equilibrio.
       </h3>
