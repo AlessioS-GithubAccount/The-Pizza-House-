@@ -1,9 +1,12 @@
+// src/pages/Login.jsx
 import { useState } from 'react';
+import { useNavigate, Link } from 'react-router-dom';
 import { api } from '../lib/api';
-import { Link } from 'react-router-dom';
+import { saveAuth } from '../lib/auth';
 import styles from '../styles/login.module.css';
 
 export default function Login() {
+  const navigate = useNavigate();
   const [email, setEmail] = useState('');
   const [password, setPassword] = useState('');
   const [error, setError] = useState('');
@@ -16,12 +19,23 @@ export default function Login() {
     try {
       const data = await api('/api/auth/login', {
         method: 'POST',
-        body: { email, password }
+        body: { email: email.trim(), password }
       });
-      localStorage.setItem('token', data.token);
-      window.location.href = '/';
+      // data = { token, user }
+      if (!data?.token || !data?.user) {
+        throw new Error('Risposta non valida dal server');
+      }
+
+      // Salva auth nel localStorage e notifica la UI (Navbar)
+      saveAuth({ token: data.token, user: data.user });
+
+      // Naviga in home (SPA)
+      navigate('/');
     } catch (err) {
-      setError(err.message);
+      const msg =
+        err?.message ||
+        (typeof err === 'string' ? err : 'Errore di accesso, riprova.');
+      setError(msg);
     } finally {
       setLoading(false);
     }
@@ -40,6 +54,7 @@ export default function Login() {
             className="form-control"
             value={email}
             onChange={e => setEmail(e.target.value)}
+            autoComplete="email"
             required
           />
         </div>
@@ -51,6 +66,7 @@ export default function Login() {
             className="form-control"
             value={password}
             onChange={e => setPassword(e.target.value)}
+            autoComplete="current-password"
             required
           />
         </div>

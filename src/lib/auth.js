@@ -1,25 +1,19 @@
-// src/lib/auth.js  (FRONTEND)
-// Piccolo store per l'autenticazione lato client
+// src/lib/auth.js
 const KEY = 'auth';
 
 function safeParse(s, f = null) { try { return JSON.parse(s); } catch { return f; } }
 
+// Legge sia il nuovo formato { token, user } salvato in "auth",
+// sia le vecchie chiavi "token" / "user"
 export function getAuth() {
-  return safeParse(localStorage.getItem(KEY), { token: null, user: null });
-}
+  const fromNew = safeParse(localStorage.getItem(KEY), null);
+  if (fromNew && fromNew.token) return fromNew;
 
-export function saveAuth({ token, user }) {
-  localStorage.setItem(KEY, JSON.stringify({ token, user }));
-  window.dispatchEvent(new Event('auth:changed'));
-  return { token, user };
-}
+  const legacyToken = localStorage.getItem('token');
+  const legacyUser  = safeParse(localStorage.getItem('user'), null);
+  if (legacyToken) return { token: legacyToken, user: legacyUser };
 
-export function logout() {
-  localStorage.removeItem(KEY);
-  // per compatibilità con eventuali salvataggi vecchi:
-  localStorage.removeItem('token');
-  localStorage.removeItem('user');
-  window.dispatchEvent(new Event('auth:changed'));
+  return { token: null, user: null };
 }
 
 export function isLoggedIn() {
@@ -28,6 +22,22 @@ export function isLoggedIn() {
 
 export function getUser() {
   return getAuth()?.user || null;
+}
+
+// Salva in formato nuovo + copia anche nelle chiavi legacy
+export function saveAuth({ token, user }) {
+  localStorage.setItem(KEY, JSON.stringify({ token, user }));
+  localStorage.setItem('token', token || '');                 // legacy compat
+  localStorage.setItem('user', JSON.stringify(user || null)); // legacy compat
+  window.dispatchEvent(new Event('auth:changed'));
+  return { token, user };
+}
+
+export function logout() {
+  localStorage.removeItem(KEY);
+  localStorage.removeItem('token'); // legacy
+  localStorage.removeItem('user');  // legacy
+  window.dispatchEvent(new Event('auth:changed'));
 }
 
 export function authHeader() {
