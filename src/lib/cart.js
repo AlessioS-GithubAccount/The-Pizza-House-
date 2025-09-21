@@ -18,14 +18,15 @@ export function writeCart(cart) {
 
 export function addToCart(product) {
   const cart = readCart();
-  const id = product.id;
-  const idx = cart.findIndex(it => it.id === id);
+  const id = Number(product.id);
+  const idx = cart.findIndex(it => Number(it.id) === id);
 
   const item = {
     id,
     name: product.nome ?? product.name ?? '',
     price: Number(product.prezzo ?? product.price ?? 0),
-    img: product.img_url ?? product.img ?? null,
+    // 👉 preferisci l'immagine già risolta (passata dal Menu), poi l'eventuale img_url
+    img: product.img ?? product.img_url ?? null,
     qty: 1,
   };
 
@@ -38,13 +39,15 @@ export function addToCart(product) {
 }
 
 export function removeFromCart(id) {
-  const cart = readCart().filter(it => it.id !== id);
+  const nid = Number(id);
+  const cart = readCart().filter(it => Number(it.id) !== nid);
   return writeCart(cart);
 }
 
 export function setQty(id, qty) {
   const cart = readCart();
-  const idx = cart.findIndex(it => it.id === id);
+  const nid = Number(id);
+  const idx = cart.findIndex(it => Number(it.id) === nid);
   if (idx >= 0) {
     cart[idx].qty = Math.max(1, Number(qty) || 1);
   }
