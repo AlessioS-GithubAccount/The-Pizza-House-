@@ -129,7 +129,66 @@ export default function Cart() {
         <form onSubmit={placeOrder}>
           {/* Allinea tutte le colonne al top */}
           <div className="row g-4 align-items-start">
-            {/* Colonna: Dati consegna */}
+            {/* 1) Colonna: Riepilogo ordine (PRIMA) */}
+            <div className="col-12 col-lg-5">
+              <div className={`card shadow-sm ${styles.panel}`}>
+                <div className="card-body">
+                  <h4 className={`${styles.titleOrder} mb-3`}>Riepilogo ordine</h4>
+                  <ul className="list-group list-group-flush">
+                    {items.map((it) => (
+                      <li key={it.id} className="list-group-item">
+                        <div className="d-flex align-items-center">
+                          <img
+                            src={it.img || PLACEHOLDER}
+                            alt={it.name}
+                            width="64"
+                            height="64"
+                            style={{ objectFit: 'cover', borderRadius: 8 }}
+                            className="me-3"
+                          />
+                          <div className="flex-grow-1">
+                            <div className="d-flex justify-content-between">
+                              <strong>{it.name}</strong>
+                              <span>{currency(it.price * it.qty)}</span>
+                            </div>
+                            <div className="d-flex align-items-center mt-2">
+                              <div className="btn-group" role="group" aria-label="qty">
+                                <button
+                                  type="button"
+                                  className="btn btn-outline-light btn-sm"
+                                  onClick={() => setQty(it.id, it.qty - 1)}
+                                >
+                                  −
+                                </button>
+                                <span className="btn btn-outline-light btn-sm disabled">
+                                  {it.qty}
+                                </span>
+                                <button
+                                  type="button"
+                                  className="btn btn-outline-light btn-sm"
+                                  onClick={() => setQty(it.id, it.qty + 1)}
+                                >
+                                  +
+                                </button>
+                              </div>
+                              <button
+                                type="button"
+                                className="btn btn-link text-danger ms-3 p-0"
+                                onClick={() => removeItem(it.id)}
+                              >
+                                Rimuovi
+                              </button>
+                            </div>
+                          </div>
+                        </div>
+                      </li>
+                    ))}
+                  </ul>
+                </div>
+              </div>
+            </div>
+
+            {/* 2) Colonna: Dati consegna (SECONDA) */}
             <div className="col-12 col-lg-4">
               <div className={`card shadow-sm ${styles.panel}`}>
                 <div className="card-body">
@@ -206,66 +265,7 @@ export default function Cart() {
               </div>
             </div>
 
-            {/* Colonna: Riepilogo ordine */}
-            <div className="col-12 col-lg-5">
-              <div className={`card shadow-sm ${styles.panel}`}>
-                <div className="card-body">
-                  <h4 className={`${styles.titleOrder} mb-3`}>Riepilogo ordine</h4>
-                  <ul className="list-group list-group-flush">
-                    {items.map((it) => (
-                      <li key={it.id} className="list-group-item bg-transparent text-white">
-                        <div className="d-flex align-items-center">
-                          <img
-                            src={it.img || PLACEHOLDER}
-                            alt={it.name}
-                            width="64"
-                            height="64"
-                            style={{ objectFit: 'cover', borderRadius: 8 }}
-                            className="me-3"
-                          />
-                          <div className="flex-grow-1">
-                            <div className="d-flex justify-content-between">
-                              <strong>{it.name}</strong>
-                              <span>{currency(it.price * it.qty)}</span>
-                            </div>
-                            <div className="d-flex align-items-center mt-2">
-                              <div className="btn-group" role="group" aria-label="qty">
-                                <button
-                                  type="button"
-                                  className="btn btn-outline-light btn-sm"
-                                  onClick={() => setQty(it.id, it.qty - 1)}
-                                >
-                                  −
-                                </button>
-                                <span className="btn btn-outline-light btn-sm disabled">
-                                  {it.qty}
-                                </span>
-                                <button
-                                  type="button"
-                                  className="btn btn-outline-light btn-sm"
-                                  onClick={() => setQty(it.id, it.qty + 1)}
-                                >
-                                  +
-                                </button>
-                              </div>
-                              <button
-                                type="button"
-                                className="btn btn-link text-danger ms-3 p-0"
-                                onClick={() => removeItem(it.id)}
-                              >
-                                Rimuovi
-                              </button>
-                            </div>
-                          </div>
-                        </div>
-                      </li>
-                    ))}
-                  </ul>
-                </div>
-              </div>
-            </div>
-
-            {/* Colonna: Pagamento + Totali */}
+            {/* 3) Colonna: Pagamento + Totali (TERZA) */}
             <div className="col-12 col-lg-3">
               {/* Sticky sul wrapper, non sulla card */}
               <div className={styles.sticky}>
