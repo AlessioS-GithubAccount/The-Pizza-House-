@@ -92,17 +92,6 @@ export default function Navbar() {
             </li>
             <li className={`nav-item ${styles.navItem}`}>
               <NavLink
-                to="/ordina"
-                className={({ isActive }) =>
-                  `nav-link ${styles.navLink} ${isActive ? 'active' : ''}`
-                }
-                onClick={() => document.querySelector('#mainNav')?.classList.remove('show')}
-              >
-                Ordina
-              </NavLink>
-            </li>
-            <li className={`nav-item ${styles.navItem}`}>
-              <NavLink
                 to="/login"
                 className={({ isActive }) =>
                   `nav-link ${styles.navLink} ${isActive ? 'active' : ''}`
