@@ -1,5 +1,7 @@
+// src/pages/Menu.jsx
 import React, { useEffect, useState } from 'react';
 import styles from '../styles/menu.module.css';
+import { addToCart } from '../lib/cart';
 
 // Fallback immagini locali (opzionale)
 const imgByName = {
@@ -19,32 +21,32 @@ export default function Menu() {
   const [err, setErr] = useState(null);
 
   useEffect(() => {
-    const base = import.meta.env.VITE_API_BASE_URL || ''; 
-    fetch(`${base}/api/prodotti`)
-      .then(r => (r.ok ? r.json() : Promise.reject(new Error('HTTP ' + r.status))))
-      .then(setPizzas)
-      .catch(e => setErr(String(e.message || e)))
-      .finally(() => setLoading(false));
+    const base = String(import.meta.env.VITE_API_BASE_URL || '').replace(/\/+$/, '');
+    const url = `${base}/api/prodotti`;
+    (async () => {
+      try {
+        console.log('GET', url);
+        const r = await fetch(url);
+        const ct = r.headers.get('content-type') || '';
+        if (!r.ok) throw new Error(`HTTP ${r.status}`);
+        if (!ct.includes('application/json')) {
+          const text = await r.text();
+          throw new Error(`Expected JSON, got ${ct}. First 200: ${text.slice(0, 200)}`);
+        }
+        const data = await r.json();
+        setPizzas(Array.isArray(data) ? data : []);
+      } catch (e) {
+        console.error(e);
+        setErr(String(e.message || e));
+      } finally {
+        setLoading(false);
+      }
+    })();
   }, []);
 
-  // salva il carrello in localStorage, somma quantità se la pizza è già presente
   const handleAdd = (p) => {
-    const key = 'cart';
-    const cart = JSON.parse(localStorage.getItem(key) || '[]');
-
-    const idx = cart.findIndex((it) => it.id === p.id);
-    if (idx >= 0) {
-      cart[idx].qty += 1;
-    } else {
-      cart.push({
-        id: p.id,                      // <-- ID numerico DB
-        name: p.nome,                  // <-- nome DB
-        price: Number(p.prezzo),       // <-- prezzo DB
-        img: p.img_url || imgByName[p.nome] || null, // fallback immagine
-        qty: 1,
-      });
-    }
-    localStorage.setItem(key, JSON.stringify(cart));
+    // Usa il mini-store: normalizza e notifica gli altri componenti (Navbar/Cart)
+    addToCart(p);
   };
 
   if (loading) {

@@ -1,5 +1,41 @@
+// src/components/Navbar.jsx
 import { NavLink, Link } from 'react-router-dom';
+import { useEffect, useState } from 'react';
 import styles from '../styles/Navbar.module.css';
+
+function CartBadge() {
+  const [count, setCount] = useState(0);
+
+  useEffect(() => {
+    const reload = () => {
+      try {
+        const cart = JSON.parse(localStorage.getItem('cart') || '[]');
+        const c = Array.isArray(cart) ? cart.reduce((s, it) => s + (Number(it.qty) || 0), 0) : 0;
+        setCount(c);
+      } catch {
+        setCount(0);
+      }
+    };
+    reload();
+    window.addEventListener('cart:updated', reload);
+    const onStorage = (e) => { if (e.key === 'cart') reload(); };
+    window.addEventListener('storage', onStorage);
+    return () => {
+      window.removeEventListener('cart:updated', reload);
+      window.removeEventListener('storage', onStorage);
+    };
+  }, []);
+
+  if (!count) return null;
+  return (
+    <span
+      className="position-absolute translate-middle badge rounded-pill bg-danger"
+      style={{ top: 6, right: -6, fontSize: 11 }}
+    >
+      {count}
+    </span>
+  );
+}
 
 export default function Navbar() {
   return (
@@ -19,10 +55,13 @@ export default function Navbar() {
 
         {/* Burger button + cart icon */}
         <div className="d-flex align-items-center">
-          {/* icona carrello */}
-          <Link to="/cart" className={`nav-link ${styles.cartLink}`} aria-label="Carrello">
-            <i className="fa-solid fa-cart-shopping"></i>
-          </Link>
+          {/* icona carrello + badge */}
+          <div className="position-relative">
+            <Link to="/cart" className={`nav-link ${styles.cartLink}`} aria-label="Carrello">
+              <i className="fa-solid fa-cart-shopping"></i>
+            </Link>
+            <CartBadge />
+          </div>
 
           <button
             className={`navbar-toggler ms-3 ${styles.togglerMobile}`}
