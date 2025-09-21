@@ -1,22 +1,44 @@
+// src/components/Cart.jsx
 import { useEffect, useMemo, useState } from 'react';
 import { Link, useNavigate } from 'react-router-dom';
 import styles from '../styles/cart.module.css';
+import { readCart, setQty as setQtyStore, removeFromCart, clearCart } from '../lib/cart';
 
 const SHIPPING_FEE = 3.5; // spedizione flat demo
 
 export default function Cart() {
   const navigate = useNavigate();
 
-  // Carrello dal localStorage: [{ id, name, price, img, qty }]
-  const [items, setItems] = useState(() => {
-    try {
-      const raw = localStorage.getItem('cart');
-      const parsed = raw ? JSON.parse(raw) : [];
-      return Array.isArray(parsed) ? parsed : [];
-    } catch {
-      return [];
-    }
-  });
+  // carica subito dal localStorage via helper
+  const [items, setItems] = useState(() => readCart());
+
+  // ascolta aggiornamenti dal Menu (evento custom) e da altre tab (storage)
+  useEffect(() => {
+    const reload = () => setItems(readCart());
+    reload();
+    window.addEventListener('cart:updated', reload);
+    const onStorage = (e) => { if (e.key === 'cart') reload(); };
+    window.addEventListener('storage', onStorage);
+    return () => {
+      window.removeEventListener('cart:updated', reload);
+      window.removeEventListener('storage', onStorage);
+    };
+  }, []);
+
+  // quando modifico qty da Cart, aggiorna store e poi rilegge
+  const setQty = (id, qty) => {
+    setQtyStore(id, qty);
+    setItems(readCart());
+  };
+
+  const subtotal = useMemo(
+    () => items.reduce((acc, it) => acc + it.price * it.qty, 0),
+    [items]
+  );
+  const total = useMemo(() => (items.length ? subtotal + SHIPPING_FEE : 0), [subtotal, items]);
+
+  const currency = (n) =>
+    n.toLocaleString('it-IT', { style: 'currency', currency: 'EUR', minimumFractionDigits: 2 });
 
   // Dati consegna
   const [delivery, setDelivery] = useState({
@@ -40,30 +62,9 @@ export default function Cart() {
   // Errori form
   const [errors, setErrors] = useState({});
 
-  useEffect(() => {
-    // salva ogni modifica del carrello
-    localStorage.setItem('cart', JSON.stringify(items));
-  }, [items]);
-
-  const subtotal = useMemo(
-    () => items.reduce((acc, it) => acc + it.price * it.qty, 0),
-    [items]
-  );
-  const total = useMemo(() => (items.length ? subtotal + SHIPPING_FEE : 0), [subtotal, items]);
-
-  const currency = (n) =>
-    n.toLocaleString('it-IT', { style: 'currency', currency: 'EUR', minimumFractionDigits: 2 });
-
-  const updateQty = (id, delta) => {
-    setItems((prev) =>
-      prev
-        .map((it) => (it.id === id ? { ...it, qty: Math.max(1, it.qty + delta) } : it))
-        .filter((it) => it.qty > 0)
-    );
-  };
-
   const removeItem = (id) => {
-    setItems((prev) => prev.filter((it) => it.id !== id));
+    removeFromCart(id);
+    setItems(readCart());
   };
 
   const handleDeliveryChange = (e) => {
@@ -103,7 +104,6 @@ export default function Cart() {
     }
     if (!validate()) return;
 
-    // DEMO: simulazione ordine
     const order = {
       items,
       delivery,
@@ -112,14 +112,12 @@ export default function Cart() {
       created_at: new Date().toISOString(),
     };
 
-    // salva ordine demo
     localStorage.setItem('last_order', JSON.stringify(order));
-    // svuota carrello
-    localStorage.removeItem('cart');
-    setItems([]);
+    clearCart();
+    setItems(readCart());
 
     alert('Ordine confermato! (demo)');
-    navigate('/'); // torna alla home
+    navigate('/');
   };
 
   return (
@@ -223,7 +221,7 @@ export default function Cart() {
                       <li key={it.id} className="list-group-item bg-transparent text-white">
                         <div className="d-flex align-items-center">
                           <img
-                            src={it.img}
+                            src={it.img || '/images/pizzeImage/placeholder.webp'}
                             alt={it.name}
                             width="64"
                             height="64"
@@ -240,7 +238,7 @@ export default function Cart() {
                                 <button
                                   type="button"
                                   className="btn btn-outline-light btn-sm"
-                                  onClick={() => updateQty(it.id, -1)}
+                                  onClick={() => setQty(it.id, it.qty - 1)}
                                 >
                                   −
                                 </button>
@@ -250,7 +248,7 @@ export default function Cart() {
                                 <button
                                   type="button"
                                   className="btn btn-outline-light btn-sm"
-                                  onClick={() => updateQty(it.id, +1)}
+                                  onClick={() => setQty(it.id, it.qty + 1)}
                                 >
                                   +
                                 </button>
@@ -293,7 +291,7 @@ export default function Cart() {
                     </label>
                   </div>
 
-                  <div className={`p-3 rounded ${styles.payCard}`}>
+                  <div className="p-3 rounded">
                     <div className="mb-2">
                       <label className="form-label">Intestatario</label>
                       <input
