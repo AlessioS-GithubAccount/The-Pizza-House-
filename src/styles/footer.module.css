@@ -8,21 +8,11 @@
   overflow: hidden;
 }
 
-.videoBackground {
-  position: relative;
-}
-
-.backgroundVideo2 {
-  width: 100%;
-  height: auto;
-  z-index: -1;
-}
+.videoBackground { position: relative; }
+.backgroundVideo2 { width: 100%; height: auto; z-index: -1; }
 
 /* ===== Sections inside footer ===== */
-.whereWeAre {
-  text-align: left;
-  color: antiquewhite;
-}
+.whereWeAre { text-align: left; color: antiquewhite; }
 
 .footerSectionTitle {
   color: antiquewhite;
@@ -31,18 +21,30 @@
   margin-top: 12vh;
 }
 
-/* ===== Social bar ===== */
-.buttonbarSocial {
-  width: 100%;
-  display: block;
-  text-align: center;
+/* ===== MAPPA ridotta ===== */
+.mapWrap {
+  /* limita la larghezza e centra */
+  width: min(100%, 420px);
+  margin: 0 auto;            /* centra nella colonna */
 }
 
-.therealfooter {
-  display: flex;
-  justify-content: center;
-  align-items: center;
+.mapFrame {
+  display: block;
+  width: 100%;
+  aspect-ratio: 4 / 3;       /* altezza auto in base alla larghezza */
+  border: 1px solid rgba(255,255,255,0.6);
+  border-radius: 12px;
 }
+
+/* Se vuoi ancora più piccola su mobile */
+@media (max-width: 576px) {
+  .mapWrap { width: min(100%, 320px); }
+  .footerSectionTitle { font-size: 2rem; margin-top: 6vh; }
+}
+
+/* ===== Social bar ===== */
+.buttonbarSocial { width: 100%; display: block; text-align: center; }
+.therealfooter { display: flex; justify-content: center; align-items: center; }
 
 .socialIcons {
   display: flex;
@@ -51,33 +53,9 @@
   padding-left: 0;
   list-style: none;
 }
-
-.socialIcons li {
-  display: inline-block;
-  font-size: 3vw;
-  margin-right: 70px;
-}
-
-.socialIcons a {
-  text-decoration: none;
-  color: antiquewhite;
-  transition: color 0.3s ease;
-}
-
-.socialIcons a:hover {
-  color: rgb(244, 0, 0);
-}
+.socialIcons li { display: inline-block; font-size: 3vw; margin-right: 70px; }
+.socialIcons a { text-decoration: none; color: antiquewhite; transition: color 0.3s ease; }
+.socialIcons a:hover { color: rgb(244, 0, 0); }
 
 /* Address / credits */
-.address {
-  margin-top: 48px;
-  text-align: center;
-}
-
-/* Map size for small screens */
-@media screen and (max-width: 600px) {
-  .mapAdress {
-    width: 22.81em;
-    height: 18.13em;
-  }
-}
+.address { margin-top: 48px; text-align: center; }
