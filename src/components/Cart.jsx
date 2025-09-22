@@ -4,12 +4,58 @@ import { Link, useNavigate } from 'react-router-dom';
 import styles from '../styles/cart.module.css';
 import { readCart, setQty as setQtyStore, removeFromCart, clearCart } from '../lib/cart';
 
+// Stripe
+import { loadStripe } from '@stripe/stripe-js';
+import { Elements, CardElement, useStripe, useElements } from '@stripe/react-stripe-js';
+
 const SHIPPING_FEE = 3.5;
 const PLACEHOLDER = '/images/pizzeImage/placeholder.webp';
 
+// ENV (Vite o CRA)
+const STRIPE_PK =
+  (typeof import.meta !== 'undefined' && import.meta.env && import.meta.env.VITE_STRIPE_PUBLISHABLE_KEY) ||
+  (typeof process !== 'undefined' && process.env && process.env.REACT_APP_STRIPE_PUBLISHABLE_KEY) ||
+  '';
+
+const API_BASE =
+  (typeof import.meta !== 'undefined' && import.meta.env && import.meta.env.VITE_API_BASE_URL) ||
+  (typeof process !== 'undefined' && process.env && process.env.REACT_APP_API_BASE_URL) ||
+  ''; // fallback: usa proxy /api in dev
+
+const stripePromise = STRIPE_PK ? loadStripe(STRIPE_PK) : null;
+
 export default function Cart() {
+  return stripePromise ? (
+    <Elements stripe={stripePromise}>
+      <CartInner />
+    </Elements>
+  ) : (
+    <NoStripeFallback />
+  );
+}
+
+function NoStripeFallback() {
+  return (
+    <section className="container py-5">
+      <h1 className="text-center mb-4">Il tuo carrello</h1>
+      <div className="alert alert-danger">
+        <strong>Stripe non è configurato.</strong> Imposta la publishable key in <code>.env</code> come{' '}
+        <code>VITE_STRIPE_PUBLISHABLE_KEY</code> (Vite) oppure <code>REACT_APP_STRIPE_PUBLISHABLE_KEY</code> (CRA) e
+        riavvia il dev server.
+      </div>
+    </section>
+  );
+}
+
+function CartInner() {
   const navigate = useNavigate();
+  const stripe = useStripe();
+  const elements = useElements();
+
   const [items, setItems] = useState(() => readCart());
+  const [clientSecret, setClientSecret] = useState(null);
+  const [piError, setPiError] = useState('');
+  const [paying, setPaying] = useState(false);
 
   useEffect(() => {
     const reload = () => setItems(readCart());
@@ -46,14 +92,6 @@ export default function Cart() {
     notes: '',
   });
 
-  const [payment, setPayment] = useState({
-    method: 'card',
-    card_name: '',
-    card_number: '',
-    expiry: '',
-    cvv: '',
-  });
-
   const [errors, setErrors] = useState({});
 
   const removeItem = (id) => {
@@ -66,11 +104,7 @@ export default function Cart() {
     setDelivery((d) => ({ ...d, [name]: value }));
   };
 
-  const handlePaymentChange = (e) => {
-    const { name, value } = e.target;
-    setPayment((p) => ({ ...p, [name]: value }));
-  };
-
+  // Validazione solo dati spedizione (i dati carta li gestisce Stripe)
   const validate = () => {
     const errs = {};
     if (!delivery.full_name.trim()) errs.full_name = 'Nome e cognome obbligatori';
@@ -78,19 +112,34 @@ export default function Cart() {
     if (!/^\d{5}$/.test(delivery.cap)) errs.cap = 'CAP non valido (5 cifre)';
     if (!delivery.city.trim()) errs.city = 'Città obbligatoria';
     if (!/^\+?\d[\d\s\-]{5,}$/.test(delivery.phone)) errs.phone = 'Telefono non valido';
-
-    if (payment.method === 'card') {
-      if (!payment.card_name.trim()) errs.card_name = 'Intestatario obbligatorio';
-      if (!/^\d{13,19}$/.test(payment.card_number.replace(/\s+/g, '')))
-        errs.card_number = 'Numero carta non valido';
-      if (!/^(0[1-9]|1[0-2])\/\d{2}$/.test(payment.expiry)) errs.expiry = 'Scadenza MM/YY';
-      if (!/^\d{3,4}$/.test(payment.cvv)) errs.cvv = 'CVV non valido';
-    }
     setErrors(errs);
     return Object.keys(errs).length === 0;
   };
 
-  const placeOrder = (e) => {
+  // Crea un PaymentIntent sul server e restituisce il client_secret
+  const createPaymentIntent = async (amountEuro) => {
+    setPiError('');
+    const urlBase = (API_BASE || '').replace(/\/$/, '');
+    const res = await fetch(`${urlBase}/api/create-payment-intent`, {
+      method: 'POST',
+      headers: { 'Content-Type': 'application/json' },
+      body: JSON.stringify({
+        amount: Math.round(amountEuro * 100), // in cent
+        currency: 'EUR',
+        metadata: {
+          cart_items: items.map(i => `${i.name}x${i.qty}`).join(', ')
+        }
+      })
+    });
+    const data = await res.json().catch(() => ({}));
+    if (!res.ok || !data.clientSecret) {
+      throw new Error(data.error || 'Errore nella creazione del PaymentIntent');
+    }
+    setClientSecret(data.clientSecret);
+    return data.clientSecret;
+  };
+
+  const placeOrder = async (e) => {
     e.preventDefault();
     if (!items.length) {
       alert('Il carrello è vuoto. Vai al menu per aggiungere prodotti.');
@@ -98,20 +147,69 @@ export default function Cart() {
     }
     if (!validate()) return;
 
-    const order = {
-      items,
-      delivery,
-      payment: { method: payment.method, last4: payment.card_number.slice(-4) },
-      amounts: { subtotal, shipping: SHIPPING_FEE, total },
-      created_at: new Date().toISOString(),
-    };
+    if (!stripe || !elements) return;
 
-    localStorage.setItem('last_order', JSON.stringify(order));
-    clearCart();
-    setItems(readCart());
+    setPaying(true);
+    try {
+      // crea PI se non esiste già o se l’importo è cambiato
+      const cs = await createPaymentIntent(total);
 
-    alert('Ordine confermato! (demo)');
-    navigate('/');
+      const card = elements.getElement(CardElement);
+      if (!card) throw new Error('Campo carta non inizializzato');
+
+      const { error, paymentIntent } = await stripe.confirmCardPayment(cs, {
+        payment_method: {
+          card,
+          billing_details: {
+            name: delivery.full_name,
+            phone: delivery.phone
+          }
+        },
+        shipping: {
+          name: delivery.full_name,
+          phone: delivery.phone,
+          address: {
+            line1: delivery.address,
+            postal_code: delivery.cap,
+            city: delivery.city,
+            country: 'IT'
+          }
+        }
+      });
+
+      if (error) {
+        setPiError(error.message || 'Pagamento rifiutato');
+        setPaying(false);
+        return;
+      }
+
+      if (paymentIntent && paymentIntent.status === 'succeeded') {
+        const order = {
+          items,
+          delivery,
+          payment: {
+            method: 'stripe',
+            last4: paymentIntent.charges?.data?.[0]?.payment_method_details?.card?.last4 || '****'
+          },
+          amounts: { subtotal, shipping: SHIPPING_FEE, total },
+          created_at: new Date().toISOString(),
+          stripe_pi: paymentIntent.id
+        };
+        localStorage.setItem('last_order', JSON.stringify(order));
+        clearCart();
+        setItems(readCart());
+        setPaying(false);
+        alert('Pagamento riuscito! Ordine confermato (test).');
+        navigate('/');
+        return;
+      }
+
+      setPiError('Pagamento non completato.');
+    } catch (err) {
+      setPiError(err.message || 'Errore di pagamento');
+    } finally {
+      setPaying(false);
+    }
   };
 
   return (
@@ -134,9 +232,9 @@ export default function Cart() {
               <div className={`card shadow-sm ${styles.panel}`}>
                 <div className="card-body">
                   <h4 className={`${styles.titleOrder} mb-3`}>Riepilogo ordine</h4>
-                  <ul className="list-group list-group-flush">
+                  <ul className={`list-group list-group-flush ${styles.orderList}`}>
                     {items.map((it) => (
-                      <li key={it.id} className="list-group-item">
+                      <li key={it.id} className={`list-group-item ${styles.orderListItem}`}>
                         <div className="d-flex align-items-center">
                           <img
                             src={it.img || PLACEHOLDER}
@@ -156,7 +254,7 @@ export default function Cart() {
                                 <button
                                   type="button"
                                   className="btn btn-outline-light btn-sm"
-                                  onClick={() => setQty(it.id, it.qty - 1)}
+                                  onClick={() => setQty(it.id, Math.max(1, it.qty - 1))}
                                 >
                                   −
                                 </button>
@@ -267,7 +365,6 @@ export default function Cart() {
 
             {/* 3) Colonna: Pagamento + Totali (TERZA) */}
             <div className="col-12 col-lg-3">
-              {/* Sticky sul wrapper, non sulla card */}
               <div className={styles.sticky}>
                 <div className={`card shadow-sm ${styles.panel}`}>
                   <div className="card-body">
@@ -280,68 +377,33 @@ export default function Cart() {
                         name="method"
                         id="payCard"
                         value="card"
-                        checked={payment.method === 'card'}
-                        onChange={(e) => setPayment((p) => ({ ...p, method: e.target.value }))}
+                        checked
+                        readOnly
                       />
                       <label className="form-check-label" htmlFor="payCard">
-                        Carta
+                        Carta (test)
                       </label>
                     </div>
 
-                    <div className="p-3 rounded">
-                      <div className="mb-2">
-                        <label className="form-label">Intestatario</label>
-                        <input
-                          className={`form-control ${errors.card_name ? 'is-invalid' : ''}`}
-                          name="card_name"
-                          value={payment.card_name}
-                          onChange={handlePaymentChange}
-                          placeholder="Mario Rossi"
+                    <div className="p-3 rounded border">
+                      <label className="form-label">Dati carta (Stripe test)</label>
+                      <div className="form-control" style={{ paddingTop: 12, paddingBottom: 12 }}>
+                        <CardElement
+                          options={{
+                            style: {
+                              base: {
+                                fontSize: '16px',
+                                color: '#212529',
+                                '::placeholder': { color: '#adb5bd' }
+                              },
+                              invalid: { color: '#dc3545' }
+                            }
+                          }}
                         />
-                        {errors.card_name && (
-                          <div className="invalid-feedback">{errors.card_name}</div>
-                        )}
                       </div>
-
-                      <div className="mb-2">
-                        <label className="form-label">Numero carta</label>
-                        <input
-                          className={`form-control ${errors.card_number ? 'is-invalid' : ''}`}
-                          name="card_number"
-                          value={payment.card_number}
-                          onChange={handlePaymentChange}
-                          inputMode="numeric"
-                          placeholder="4111111111111111"
-                        />
-                        {errors.card_number && (
-                          <div className="invalid-feedback">{errors.card_number}</div>
-                        )}
-                      </div>
-
-                      <div className="row">
-                        <div className="col-6 mb-2">
-                          <label className="form-label">Scadenza (MM/YY)</label>
-                          <input
-                            className={`form-control ${errors.expiry ? 'is-invalid' : ''}`}
-                            name="expiry"
-                            value={payment.expiry}
-                            onChange={handlePaymentChange}
-                            placeholder="08/27"
-                          />
-                          {errors.expiry && <div className="invalid-feedback">{errors.expiry}</div>}
-                        </div>
-                        <div className="col-6 mb-2">
-                          <label className="form-label">CVV</label>
-                          <input
-                            className={`form-control ${errors.cvv ? 'is-invalid' : ''}`}
-                            name="cvv"
-                            value={payment.cvv}
-                            onChange={handlePaymentChange}
-                            inputMode="numeric"
-                            placeholder="123"
-                          />
-                          {errors.cvv && <div className="invalid-feedback">{errors.cvv}</div>}
-                        </div>
+                      {piError && <div className="text-danger small mt-2">{piError}</div>}
+                      <div className="text-muted small mt-2">
+                        Usa carte di test: es. <code>4242 4242 4242 4242</code>, una data futura e un CVC qualsiasi.
                       </div>
                     </div>
 
@@ -360,12 +422,16 @@ export default function Cart() {
                       <strong>{currency(total)}</strong>
                     </div>
 
-                    <button type="submit" className="btn btn-warning w-100 mt-3">
-                      Conferma ordine
+                    <button
+                      type="submit"
+                      className="btn btn-warning w-100 mt-3"
+                      disabled={paying || !stripe || !elements}
+                    >
+                      {paying ? 'Elaboro…' : 'Paga e conferma'}
                     </button>
 
                     <p className="text-muted small mt-2 mb-0">
-                      Pagamento simulato per scopi dimostrativi.
+                      Modalità test: nessun addebito reale.
                     </p>
                   </div>
                 </div>

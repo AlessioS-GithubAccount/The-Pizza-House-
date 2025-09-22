@@ -1,3 +1,6 @@
+/* src/styles/cart.module.css */
+
+/* Pannelli base */
 .panel {
   background-color: rgba(255, 255, 255, 0.06);
   color: antiquewhite;
@@ -7,7 +10,7 @@
 
 .sticky {
   position: sticky;
-  top: 88px; 
+  top: 88px;
 }
 
 .payCard {
@@ -15,6 +18,70 @@
   border: 1px solid rgba(255, 255, 255, 0.25);
 }
 
-.titleOrder{
+.titleOrder {
   color: black;
+}
+
+/* ====== COMPATTA RIEPILOGO ORDINE ====== */
+.orderList {
+  margin: 0;
+  padding: 0;
+}
+
+/* compatta gli item bootstrap dentro la lista */
+.orderList :global(.list-group) {
+  margin: 0;
+}
+
+/* ogni item: meno padding verticale + separatore sottile */
+.orderList :global(.list-group-item) {
+  padding: 8px 10px;
+  line-height: 1.2;
+  background: transparent;
+  border: 0;
+  border-bottom: 1px solid rgba(255, 255, 255, 0.12);
+  margin: 0;
+}
+
+.orderList :global(.list-group-item:last-child) {
+  border-bottom: 0;
+}
+
+/* gap interno più stretto tra immagine e testo */
+.orderList :global(.list-group-item > .d-flex.align-items-center) {
+  gap: 10px;
+}
+
+/* riga titolo/prezzo più raccolta */
+.orderList :global(.list-group-item .d-flex.justify-content-between) {
+  gap: 8px;
+}
+
+/* gruppo quantità vicino al testo */
+.orderList :global(.btn-group) {
+  margin-left: 6px;
+}
+
+/* immagine più compatta (facoltativo) */
+.orderListItem img {
+  width: 56px !important;
+  height: 56px !important;
+  border-radius: 8px;
+  object-fit: cover;
+}
+
+/* pulsante Rimuovi più vicino */
+.orderList :global(.btn-link.text-danger) {
+  margin-left: 8px !important;
+}
+
+/* Schermi piccoli: ancora più compatti */
+@media (max-width: 576px) {
+  .orderList :global(.list-group-item) {
+    padding: 6px 8px;
+  }
+  .orderListItem img {
+    width: 52px !important;
+    height: 52px !important;
+  }
 }
