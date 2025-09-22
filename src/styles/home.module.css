@@ -1,3 +1,5 @@
+/* src/styles/home.module.css */
+
 /* ===== Hero / header ===== */
 .header {
   width: 100%;
@@ -6,21 +8,28 @@
   text-shadow: 0 0 4px black;
   margin-top: 2px;
   position: relative;
+  overflow: hidden; /* evita overflow orizzontale del video */
 }
 
 .backgroundVideo {
+  position: absolute;
+  inset: 0;
   width: 100%;
-  height: auto;
+  height: 100%;
+  object-fit: cover;  /* riempie senza deformare */
+  display: block;
   z-index: -1;
 }
 
+/* Titolo e sottotitolo: centrati in orizzontale rispetto all'header */
 .headerTitle {
   font-size: 6rem;
   margin: 0;
   position: absolute;
-  top: 30%;
-  left: 50%;
-  transform: translate(-50%, -50%);
+  top: 38%;              /* regola se lo vuoi più alto/basso */
+  left: 40%;
+  transform: translateX(-50%);  /* solo asse X */
+  text-align: center;
 }
 
 .headerSubtitle {
@@ -28,9 +37,44 @@
   font-size: 2rem;
   margin: 0;
   position: absolute;
-  top: 50%;
-  left: 50%;
-  transform: translate(-50%, -50%);
+  top: 52%;              /* leggermente sotto al titolo */
+  left: 44%;
+  transform: translateX(-20%);  /* solo asse X */
+  text-align: center;
+}
+
+/* ==== HERO animations ==== */
+/* Overlay: fade-in */
+.overlayFadeInit { opacity: 0; }
+.overlayFadeIn   { animation: overlayFade 800ms ease-out forwards; }
+@keyframes overlayFade {
+  from { opacity: 0; }
+  to   { opacity: .35; }
+}
+
+/* Testi: fade-up + leggero slide */
+.fadeUpInit {
+  opacity: 0;
+  transform: translateY(10px);
+  will-change: opacity, transform;
+}
+.fadeUpIn {
+  animation: fadeUp 680ms cubic-bezier(.22,.61,.36,1) forwards;
+}
+.fadeUpInDelay {
+  animation: fadeUp 720ms cubic-bezier(.22,.61,.36,1) 140ms forwards;
+}
+@keyframes fadeUp {
+  from { opacity: 0; transform: translateY(10px); }
+  to   { opacity: 1; transform: translateY(0); }
+}
+
+/* Video: solo fade-in lento */
+.videoFadeInit { opacity: 0; }
+.videoFadeIn   { animation: heroVideoFade 2.0s ease-out forwards; }
+@keyframes heroVideoFade {
+  from { opacity: 0; }
+  to   { opacity: 1; }
 }
 
 /* ===== Bio section ===== */
@@ -38,26 +82,28 @@
   display: flex;
   justify-content: center;
   align-items: center;
-  margin-bottom: 32px;
 }
-
 .logoBio {
   width: 20%;
   text-align: center;
+  margin-top: 4rem;
 }
-
 .alignBio { text-align: center; }
 
 .titleBio {
   text-align: center;
-  margin-bottom: 64px;
-  margin-top: 32px;
+  margin-top: 2rem !important;
 }
 
 .bioP {
   width: 80%;
   color: antiquewhite;
   margin-top: 20px;
+}
+
+.distanceTitle{
+  margin-bottom: 2rem !important;
+  margin-top: 2rem;
 }
 
 .registerbtn {
@@ -71,64 +117,66 @@
   text-align: center;
   cursor: pointer;
   transition: all 0.3s ease;
+  margin-top: 2rem;
 }
 .registerbtn:hover {
-  box-shadow: 0 0 16px 2px rgb(0, 0, 0, 0.5);
+  box-shadow: 0 0 16px 2px rgb(0 0 0 / 50%);
   background-color: #fbfbfb !important;
-  color: rgb(0, 0, 0) !important;
+  color: #000 !important;
   text-decoration: none;
   font-weight: 600;
 }
 
-.separator { width: 100px; height: 4px; background-color: #c1922e; margin: 0 auto; }
-.mbBio { margin-bottom: 32px; }
+/* Barre separatrici */
+.separator { width: 80%; height: 4px; background-color: #c1922e; margin-top: 2rem; }
+.separator1 { width: 80%; height: 4px; background-color: #c1922e; }
+
 .mbBio2 { margin-top: 32px; }
+.mbBio{ margin-bottom: 4rem !important; }
 
 /* Video card */
-.videoCard {
-  max-width: 920px;
-  width: 30%;
-  margin: 0 auto;
-}
+.videoCard { max-width: 920px; width: 30%; margin: 0 auto; }
+.videoBorder { display: block; width: 100%; padding: 2px; border: 0px solid #fff; border-radius: 24px; background-color: rgba(255, 255, 255, 0.06); }
+.videoCardInner { position: relative; width: calc(100% - 4px); margin: 0 auto; border-radius: inherit; overflow: hidden; background: rgba(0,0,0,0.35); }
+.aspect169::before { content: ""; display: block; padding-top: 56.25%; }
+.videoCardMedia { position: absolute; inset: 0; width: 100%; height: 100%; object-fit: cover; display: block; }
 
-/* bordo quasi attaccato al video */
-.videoBorder {
-  display: block;
-  width: 100%;
-  padding: 2px;                 
-  border: 0px solid #fff;
+/* ===== Glass container ===== */
+.glass {
+  background: rgb(255, 255, 255, 0.5);                 /* semitrasparente bianco */
+  border: 1px solid #ffffff47;
   border-radius: 24px;
-  background-color: rgba(255, 255, 255, 0.06);
+  padding: clamp(16px, 3vw, 32px);
+  box-shadow: 0 10px 30px rgba(0,0,0,0.12);
+  backdrop-filter: blur(12px) saturate(140%);
+  -webkit-backdrop-filter: blur(12px) saturate(140%);
+  margin: clamp(16px, 3vw, 40px) auto;
 }
 
-/* il contenitore interno riempie quasi tutto,
-   lasciando solo i 2px di distacco */
-.videoCardInner {
-  position: relative;
-  width: calc(100% - 4px);       
-  margin: 0 auto;
-  border-radius: inherit;
+/* Fallback se il browser non supporta backdrop-filter */
+@supports not ((backdrop-filter: blur(12px)) or (-webkit-backdrop-filter: blur(12px))) {
+  .glass { background: rgba(255, 255, 255, 0.95); }
+}
+
+/* Spaziatura 4vh tra le due row sotto il glass */
+.mt4vh { margin-top: 4vh !important; }
+
+/* Media dentro il glass: bordi morbidi e overflow nascosto */
+.glassMedia {
+  border-radius: 16px;
   overflow: hidden;
-  background: rgba(0,0,0,0.35);
-}
-
-.aspect169::before {
-  content: "";
-  display: block;
-  padding-top: 56.25%;
-}
-
-.videoCardMedia {
-  position: absolute;
-  inset: 0;
-  width: 100%;
-  height: 100%;
-  object-fit: cover;
   display: block;
 }
 
+.titleRecipe1{ margin-top: 4vh !important; }
 
-/* ===== Ricetta / immagini ===== */
+.narrow80 {
+  width: 80%;
+  margin: 0 auto; /* centra */
+  margin-top: 4vh;
+}
+
+/* ===== Sezione ricetta / immagini ===== */
 .containerRicetta {
   width: 100%;
   margin-top: 150px;
@@ -147,16 +195,21 @@
   display: flex;
   align-items: center; justify-content: center;
   position: relative; text-align: center;
+  overflow: hidden;
 }
+/* rimuoviamo la vecchia immagine di sfondo via ::before per usare il carosello */
 .containerOrari::before {
+  content: none;
+}
+/* overlay scuro sopra il carosello */
+.containerOrari::after {
   content: '';
   position: absolute; inset: 0;
-  background-image: url('/images/Menù-Pizzeria_Bianco-e-Nero-2-1024x731.jpg'); 
-  background-size: cover;
-  filter: blur(3px);
+  background: rgba(0,0,0,0.35);
+  z-index: 1;
 }
 .tabOrari {
-  position: relative; z-index: 1;
+  position: relative; z-index: 2; /* sopra overlay e immagini */
   color: white; border: 3px white;
 }
 .tabOrari h1,
@@ -164,6 +217,81 @@
 .tabOrari h3,
 .tabOrari h4,
 .tabOrari h5 { margin-bottom: 30px; }
+
+/* ===== Carosello immagini sezione Orari ===== */
+.orariCarousel {
+  position: absolute;
+  inset: 0;
+  z-index: 0;
+}
+.slide {
+  position: absolute;
+  inset: 0;
+  width: 100%;
+  height: 100%;
+  object-fit: cover;
+  opacity: 0;
+  animation: crossfade 18s infinite, kenburns 18s linear infinite;
+}
+.s1 { animation-delay: 0s; }
+.s2 { animation-delay: 6s; }
+.s3 { animation-delay: 12s; }
+
+@keyframes crossfade {
+  0%   { opacity: 0; }
+  5%   { opacity: 1; }
+  33%  { opacity: 1; }
+  38%  { opacity: 0; }
+  100% { opacity: 0; }
+}
+@keyframes kenburns {
+  0%   { transform: scale(1) translate(0,0); }
+  100% { transform: scale(1.08) translate(2%, 0); }
+}
+
+/* ===== Animazioni SOLO CSS (on-load) — opzionali legacy ===== */
+.aFadeUp { opacity:0; transform: translateY(10px); animation: fadeUp 640ms cubic-bezier(.22,.61,.36,1) both; }
+.aGrowBar { transform: scaleX(0); transform-origin: center; animation: growBar 520ms ease-out both; }
+@keyframes growBar { from { transform: scaleX(0);} to { transform: scaleX(1);} }
+.aPop { opacity:0; transform: translateY(8px) scale(0.98); animation: popIn 520ms cubic-bezier(.22,.61,.36,1) both; }
+@keyframes popIn { from { opacity:0; transform: translateY(8px) scale(0.98);} to { opacity:1; transform: translateY(0) scale(1);} }
+
+/* ===== Reveal on scroll (triggerato da IntersectionObserver) ===== */
+/* Stato iniziale comune */
+[data-reveal] {
+  opacity: 0;
+  transform: translateY(10px);
+  will-change: opacity, transform;
+}
+/* Fade-up sugli elementi */
+[data-reveal="fade"][data-inview="true"] {
+  animation: fadeUp 640ms cubic-bezier(.22,.61,.36,1) both;
+}
+/* Barra che “cresce” da centro */
+[data-reveal="bar"] {
+  opacity: 1;
+  transform: scaleX(0);
+  transform-origin: center;
+}
+[data-reveal="bar"][data-inview="true"] {
+  animation: growBar 520ms ease-out both;
+}
+/* Bottone: micro pop-in */
+[data-reveal="pop"] {
+  opacity: 0;
+  transform: translateY(8px) scale(0.98);
+}
+[data-reveal="pop"][data-inview="true"] {
+  animation: popIn 520ms cubic-bezier(.22,.61,.36,1) both;
+}
+
+/* Ritardi a scalare (usati come classi nel JSX) */
+.d100 { animation-delay: 100ms !important; }
+.d200 { animation-delay: 200ms !important; }
+.d300 { animation-delay: 300ms !important; }
+.d400 { animation-delay: 400ms !important; }
+.d500 { animation-delay: 500ms !important; }
+.d600 { animation-delay: 600ms !important; }
 
 /* ===== Responsive ===== */
 @media screen and (max-width: 600px) {
@@ -175,4 +303,31 @@
   .headerTitle { margin-top: 42px; font-size: 4rem; }
   .headerSubtitle { font-size: 1.5rem; }
   .header { height: 350px; }
+}
+
+/* ===== Accessibilità: riduzione movimento ===== */
+@media (prefers-reduced-motion: reduce) {
+  .overlayFadeIn,
+  .fadeUpIn,
+  .fadeUpInDelay,
+  .videoFadeIn,
+  .aFadeUp,
+  .aGrowBar,
+  .aPop,
+  [data-reveal] {
+    animation: none !important;
+  }
+  .overlayFadeInit,
+  .fadeUpInit,
+  .videoFadeInit,
+  [data-reveal] {
+    opacity: 1 !important;
+    transform: none !important;
+  }
+  /* Disattiva carosello e mostra solo la prima immagine */
+  .slide {
+    animation: none !important;
+    opacity: 0;
+  }
+  .s1 { opacity: 1; }
 }
