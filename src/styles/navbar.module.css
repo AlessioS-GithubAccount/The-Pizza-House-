@@ -87,6 +87,44 @@
   color: rgb(255, 251, 0) !important;
 }
 
+/* ===== Slide-down + Fade per la navbar ===== */
+.navInit {
+  opacity: 0;
+  transform: translateY(-16px);
+  will-change: opacity, transform;
+}
+
+/* Keyframes dell'animazione */
+@keyframes navSlideDownFade {
+  from {
+    opacity: 0;
+    transform: translateY(-80px);
+    filter: saturate(0.05);
+  }
+  to {
+    opacity: 1;
+    transform: translateY(0);
+    filter: saturate(1);
+  }
+}
+
+/* Stato animato (da aggiungere dopo il mount) */
+.navIn {
+  animation: navSlideDownFade 1520ms cubic-bezier(.22,.61,.36,1) both;
+}
+
+/* Accessibilità: se l'utente preferisce meno movimento, disabilita l'animazione */
+@media (prefers-reduced-motion: reduce) {
+  .navInit {
+    opacity: 1;
+    transform: none;
+  }
+  .navIn {
+    animation: none !important;
+  }
+}
+
+
 
 
 /* Responsive: smartphone */

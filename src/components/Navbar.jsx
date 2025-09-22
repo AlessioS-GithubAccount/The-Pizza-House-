@@ -6,7 +6,6 @@ import { isLoggedIn, getUser, logout } from '../lib/auth';
 
 function CartBadge() {
   const [count, setCount] = useState(0);
-
   useEffect(() => {
     const reload = () => {
       try {
@@ -26,7 +25,6 @@ function CartBadge() {
       window.removeEventListener('storage', onStorage);
     };
   }, []);
-
   if (!count) return null;
   return (
     <span
@@ -40,9 +38,9 @@ function CartBadge() {
 
 export default function Navbar() {
   const navigate = useNavigate();
-
   const [logged, setLogged] = useState(() => isLoggedIn());
   const [user, setUser] = useState(() => getUser());
+  const [entered, setEntered] = useState(false); // <-- NEW
 
   useEffect(() => {
     const onAuthChange = () => {
@@ -55,6 +53,12 @@ export default function Navbar() {
       window.removeEventListener('auth:changed', onAuthChange);
       window.removeEventListener('storage', onAuthChange);
     };
+  }, []);
+
+  useEffect(() => {
+    // micro-delay per far partire l’animazione dopo il paint
+    const id = setTimeout(() => setEntered(true), 10);
+    return () => clearTimeout(id);
   }, []);
 
   const closeBurger = () => document.querySelector('#mainNav')?.classList.remove('show');
@@ -75,7 +79,7 @@ export default function Navbar() {
   })();
 
   return (
-    <nav className={`navbar navbar-dark bg-dark fixed-top ${styles.navRoot}`}>
+    <nav className={`navbar navbar-dark bg-dark fixed-top ${styles.navRoot} ${entered ? styles.navIn : styles.navInit}`}>
       <div className={`container-fluid ${styles.navContainer}`}>
         {/* Logo + brand */}
         <div className={`mx-auto d-flex align-items-center ${styles.brandWrapper}`}>
@@ -95,7 +99,6 @@ export default function Navbar() {
 
         {/* Benvenuto + Cart + burger */}
         <div className="d-flex align-items-center">
-          {/* Benvenuto <nome> (solo se loggato) */}
           {logged && displayName && (
             <span
               className="me-2"
