@@ -3,8 +3,8 @@
   background-color: #000000;
   color: white;
   box-shadow: 0 0 3px 3px lightgray;
-  overflow: hidden;     /* ok se hai media di background */
-  height: 100px;         /* <- niente altezza fissa */
+  overflow: hidden;    
+  height: 100px;         
 }
 
 /* ===== Sections inside footer ===== */
@@ -46,7 +46,7 @@ li{
   justify-content: center;
   align-items: center;       /* centro verticale nella fascia */
   width: 100%;
-  min-height: 64px;          /* evita tagli */
+  min-height: 64px;        
 }
 
 /* lista icone */
@@ -65,7 +65,7 @@ li{
   display: flex;
 }
 
-/* link/icone: area cliccabile comoda */
+/* link/icone */
 .socialIcons a {
   display: inline-flex;
   align-items: center;
@@ -89,6 +89,7 @@ li{
   background: #c1922e;
   color: #000;
   outline: none;
+  
 }
 
 /* active */
