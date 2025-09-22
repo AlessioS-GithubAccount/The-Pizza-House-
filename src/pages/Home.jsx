@@ -12,7 +12,6 @@ export default function Home() {
           loop
           muted
           playsInline
-          poster="/images/10372997_4464061.jpg"
           style={{ objectFit: 'cover' }}
         >
           <source src="/images/production_id_4457933 (2160p).mp4" type="video/mp4" />
