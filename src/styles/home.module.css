@@ -26,9 +26,10 @@
   font-size: 6rem;
   margin: 0;
   position: absolute;
-  top: 38%;              /* regola se lo vuoi più alto/basso */
-  left: 40%;
-  transform: translateX(-50%);  /* solo asse X */
+  top: 38%;
+  left: 50%;           
+  --x: -50%;
+  transform: translate(var(--x), 0);
   text-align: center;
 }
 
@@ -37,9 +38,10 @@
   font-size: 2rem;
   margin: 0;
   position: absolute;
-  top: 52%;              /* leggermente sotto al titolo */
-  left: 44%;
-  transform: translateX(-20%);  /* solo asse X */
+  top: 52%;
+  left: 50%;
+  --x: -50%;
+  transform: translate(var(--x), 0);
   text-align: center;
 }
 
@@ -55,18 +57,21 @@
 /* Testi: fade-up + leggero slide */
 .fadeUpInit {
   opacity: 0;
-  transform: translateY(10px);
+  /* prima: transform: translateY(10px);  <-- sovrascriveva la X */
+  transform: translate(var(--x, 0), 10px);
   will-change: opacity, transform;
 }
 .fadeUpIn {
-  animation: fadeUp 680ms cubic-bezier(.22,.61,.36,1) forwards;
+  animation: fadeUp 980ms cubic-bezier(.22,.61,.36,1) forwards;
 }
 .fadeUpInDelay {
-  animation: fadeUp 720ms cubic-bezier(.22,.61,.36,1) 140ms forwards;
+  animation: fadeUp 720ms cubic-bezier(.22,.61,.36,1) 340ms forwards;
 }
+
+/* Mantiene la X e anima solo la Y (bottom -> top) */
 @keyframes fadeUp {
-  from { opacity: 0; transform: translateY(10px); }
-  to   { opacity: 1; transform: translateY(0); }
+  from { opacity: 0; transform: translate(var(--x, 0), 10px); }
+  to   { opacity: 1; transform: translate(var(--x, 0), 0); }
 }
 
 /* Video: solo fade-in lento */
@@ -179,7 +184,7 @@
 /* ===== Sezione ricetta / immagini ===== */
 .containerRicetta {
   width: 100%;
-  margin-top: 150px;
+  margin-top: 1rem;
 }
 .farine { width: 90%; }
 .pizzeriaImg { width: 70%; }
