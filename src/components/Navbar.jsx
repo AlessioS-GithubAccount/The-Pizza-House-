@@ -1,16 +1,20 @@
 // src/components/Navbar.jsx
-import { NavLink, Link, useNavigate } from 'react-router-dom';
+import { NavLink, Link, useNavigate, useLocation } from 'react-router-dom';
 import { useEffect, useState } from 'react';
-import styles from '../styles/Navbar.module.css';
+import styles from '../styles/navbar.module.css';
 import { isLoggedIn, getUser, logout } from '../lib/auth';
 
+// --- Badge carrello (inline) ---
 function CartBadge() {
   const [count, setCount] = useState(0);
+
   useEffect(() => {
     const reload = () => {
       try {
         const cart = JSON.parse(localStorage.getItem('cart') || '[]');
-        const c = Array.isArray(cart) ? cart.reduce((s, it) => s + (Number(it.qty) || 0), 0) : 0;
+        const c = Array.isArray(cart)
+          ? cart.reduce((s, it) => s + (Number(it.qty) || 0), 0)
+          : 0;
         setCount(c);
       } catch {
         setCount(0);
@@ -25,12 +29,11 @@ function CartBadge() {
       window.removeEventListener('storage', onStorage);
     };
   }, []);
+
   if (!count) return null;
+
   return (
-    <span
-      className="position-absolute translate-middle badge rounded-pill bg-danger"
-      style={{ top: 6, right: -6, fontSize: 11 }}
-    >
+    <span className={`${styles.cartBadge} badge rounded-pill bg-danger`}>
       {count}
     </span>
   );
@@ -38,9 +41,18 @@ function CartBadge() {
 
 export default function Navbar() {
   const navigate = useNavigate();
+  const location = useLocation();
+
   const [logged, setLogged] = useState(() => isLoggedIn());
   const [user, setUser] = useState(() => getUser());
-  const [entered, setEntered] = useState(false); // <-- NEW
+  const [burgerOpen, setBurgerOpen] = useState(false);
+
+  // Animazione entrata navbar (stile Home)
+  const [entered, setEntered] = useState(false);
+  useEffect(() => {
+    const id = setTimeout(() => setEntered(true), 10);
+    return () => clearTimeout(id);
+  }, []);
 
   useEffect(() => {
     const onAuthChange = () => {
@@ -55,18 +67,20 @@ export default function Navbar() {
     };
   }, []);
 
-  useEffect(() => {
-    // micro-delay per far partire l’animazione dopo il paint
-    const id = setTimeout(() => setEntered(true), 10);
-    return () => clearTimeout(id);
-  }, []);
+  // chiudi pannello al cambio route
+  useEffect(() => { setBurgerOpen(false); }, [location.pathname]);
 
-  const closeBurger = () => document.querySelector('#mainNav')?.classList.remove('show');
+  // brand: se già in home, non rinaviga: scroll-to-top smooth
+  const handleBrandClick = (e) => {
+    if (location.pathname === '/') {
+      e.preventDefault();
+      window.scrollTo({ top: 0, behavior: 'smooth' });
+    }
+  };
 
   const handleLogout = (e) => {
     e.preventDefault();
     logout();
-    closeBurger();
     navigate('/');
   };
 
@@ -81,96 +95,71 @@ export default function Navbar() {
   return (
     <nav className={`navbar navbar-dark bg-dark fixed-top ${styles.navRoot} ${entered ? styles.navIn : styles.navInit}`}>
       <div className={`container-fluid ${styles.navContainer}`}>
-        {/* Logo + brand */}
-        <div className={`mx-auto d-flex align-items-center ${styles.brandWrapper}`}>
+
+        {/* Brand centrato (logo + title) */}
+        <div className={styles.brandWrapper}>
           <Link
             to="/"
+            onClick={handleBrandClick}
             className={`navbar-brand d-flex align-items-center ${styles.brand}`}
-            onClick={closeBurger}
+            aria-label="Vai alla Home"
           >
             <img
               src="/images/pizza-logo-E6DE845BD3-seeklogo.com.png"
-              alt="Logo"
+              alt="Logo The Pizza House"
               className={styles.logoPage}
             />
-            <span className={`ms-2 ${styles.brand}`}>THE PIZZA HOUSE</span>
+            <span className={`ms-2 ${styles.navTitle}`}>THE PIZZA HOUSE</span>
           </Link>
         </div>
 
-        {/* Benvenuto + Cart + burger */}
-        <div className="d-flex align-items-center">
+        {/* Destra: Benvenuto + Carrello + Burger */}
+        <div className={styles.rightCluster}>
           {logged && displayName && (
-            <span
-              className="me-2"
-              style={{ color: '#fff', opacity: 0.9, fontSize: 14, whiteSpace: 'nowrap' }}
-            >
+            <span className={styles.welcome}>
               Benvenuto <strong>{displayName}</strong>
             </span>
           )}
 
-          {/* icona carrello + badge */}
-          <div className="position-relative">
-            <Link
-              to="/cart"
-              className={`nav-link ${styles.cartLink}`}
-              aria-label="Carrello"
-              onClick={closeBurger}
-            >
-              <i className="fa-solid fa-cart-shopping"></i>
-            </Link>
+          <Link
+            to="/cart"
+            className={`${styles.navLink} ${styles.cartLink}`}
+            aria-label="Carrello"
+          >
+            <i className="fa-solid fa-cart-shopping"></i>
             <CartBadge />
-          </div>
+          </Link>
 
           <button
-            className={`navbar-toggler ms-3 ${styles.togglerMobile}`}
-            type="button"
-            data-bs-toggle="collapse"
-            data-bs-target="#mainNav"
-            aria-controls="mainNav"
-            aria-expanded="false"
-            aria-label="Toggle navigation"
+            className={styles.burgerBtn}
+            aria-label="Apri/chiudi menu"
+            aria-expanded={burgerOpen ? 'true' : 'false'}
+            aria-controls="desktopBurgerPanel"
+            onClick={() => setBurgerOpen(v => !v)}
           >
-            <span className="navbar-toggler-icon"></span>
+            <i className="fa-solid fa-bars" aria-hidden="true"></i>
           </button>
         </div>
+      </div>
 
-        {/* Burger menu */}
-        <div className={`collapse navbar-collapse ${styles.collapseBg}`} id="mainNav">
-          <ul className={`navbar-nav ms-auto text-center ${styles.navList}`}>
-            <li className={`nav-item ${styles.navItem}`}>
-              <NavLink
-                to="/menu"
-                className={({ isActive }) => `nav-link ${styles.navLink} ${isActive ? 'active' : ''}`}
-                onClick={closeBurger}
-              >
-                Menu
-              </NavLink>
-            </li>
-            {!logged ? (
-              <li className={`nav-item ${styles.navItem}`}>
-                <NavLink
-                  to="/login"
-                  className={({ isActive }) => `nav-link ${styles.navLink} ${isActive ? 'active' : ''}`}
-                  onClick={closeBurger}
-                >
-                  Accedi
-                </NavLink>
-              </li>
-            ) : (
-              <li className={`nav-item ${styles.navItem}`}>
-                <a href="/logout" className={`nav-link ${styles.navLink}`} onClick={handleLogout}>
-                  Esci{displayName ? ` (${displayName})` : ''}
-                </a>
-              </li>
-            )}
+      {/* Pannello burger: Menu, Accedi/Esci, Contatti */}
+      <div
+        id="desktopBurgerPanel"
+        className={`${styles.menuPanel} ${burgerOpen ? styles.menuVisible : styles.menuHidden}`}
+      >
+        <nav className={styles.menuInner} aria-label="Menu principale">
+          <NavLink to="/menu" className={styles.menuLink}>Menu</NavLink>
 
-            <li className={`nav-item ${styles.navItem}`}>
-              <a className={`nav-link ${styles.navLink}`} href="#therealfooter" onClick={closeBurger}>
-                Contatti
-              </a>
-            </li>
-          </ul>
-        </div>
+          {!logged ? (
+            <NavLink to="/login" className={styles.menuLink}>Accedi</NavLink>
+          ) : (
+            <a href="/logout" className={styles.menuLink} onClick={handleLogout}>
+              Esci{displayName ? ` (${displayName})` : ''}
+            </a>
+          )}
+
+          <a href="#therealfooter" className={styles.menuLink}>Contatti</a>
+        </nav>
       </div>
     </nav>
   );

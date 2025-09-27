@@ -1,163 +1,230 @@
-/* Wrapper nav */
+/* ===== NAVBAR base ===== */
 .navRoot {
-  background-color: rgba(22, 22, 22, 0.95) !important;
+  --nav-bg: rgba(22,22,22,0.95);
+  background-color: var(--nav-bg) !important;
+  position: relative;
+  z-index: 1000;
+  height: 80px; /* altezza barra */
 }
 
-/* Contenitore interno  */
-.navContainer {
+.navRoot .container-fluid.navContainer {
+  position: relative; /* per centrare il brand con absolute */
   padding-left: 4vw;
-  text-align: center;
+  padding-right: 4vw;
+  min-height: 64px;
+
+  display: grid !important;           /* forza grid contro Bootstrap */
+  grid-template-columns: 1fr auto;    /* spazio | cluster destro */
+  align-items: center;
+  gap: 12px;
+  width: 100%;
 }
 
-/* Logo */
-.logoPage {
-  margin-right: 2vw;
-  width: 48px;
-  height: auto;
-}
+.logoPage { width: 48px; height: auto; margin-right: 12px; }
 
+/* ===== Brand (logo + title) centrato assoluto ===== */
 .brandWrapper {
+  position: absolute;
+  left: 50%;
+  top: 50%;
+  transform: translate(-50%, -50%); 
   display: flex;
-  justify-content: center;
-  flex: 1;              /* prende tutto lo spazio disponibile */
+  align-items: center;
+  gap: 0;
+  z-index: 1;
 }
 
-/* Brand (nome del sito) */
 .brand {
   color: antiquewhite !important;
   font-size: 1.8em;
   font-weight: 600;
-  text-decoration: none;
-  margin-left: 10vw;
+  text-decoration: none !important;
+  white-space: nowrap;
 }
-.brand:hover {
-  color: antiquewhite !important;
-  text-decoration: none;
+.brand:hover { color: antiquewhite !important; }
+
+.navTitle { font-size: 2em; text-decoration: none !important; }
+
+/* niente underline sul brand in qualunque stato */
+.navRoot a.navbar-brand,
+.navRoot a.navbar-brand:link,
+.navRoot a.navbar-brand:visited,
+.navRoot a.navbar-brand:hover,
+.navRoot a.navbar-brand:focus,
+.navRoot a.navbar-brand:active {
+  text-decoration: none !important;
 }
 
-/* Lista e voci menu */
-.navList {
-  margin-left: auto;
-  padding-right: 4vw;
-}
-.navItem {
-  margin-right: 4vw;
-}
-.navLink {
-  color: rgb(255, 255, 255) !important;
-  font-weight: 600 !important;
-  text-decoration:none;
-}
-
-.navLink:hover {
-  color: rgb(255, 251, 0) !important;
-  text-decoration: none;
-  text-shadow: 0px 3px 8px rgb(255, 255, 255);
-}
-
-/* Dropdown */
-.dropdownMenu {
-  background-color: rgba(22, 22, 22, 0.95);
-}
-.dropdownMenuBtn {
-  color: rgb(191, 45, 45) !important;
-  font-weight: bold;
-}
-
-.togglerMobile{
-  margin-right: 3rem;
-  color: rgb(255, 255, 255) !important;
-}
-
-.togglerMobile:hover{
-  color: rgb(234, 255, 0) !important;
-}
-
-/* Icona carrello */
-.cartLink {
-  color: rgb(255, 255, 255) !important;
-  font-size: 1.3rem !important;
-  margin-right: 2rem;
-  text-decoration: none;
-  display: flex;
+/* ===== Cluster destro: Benvenuto + Carrello + Burger ===== */
+.rightCluster {
+  justify-self: end; 
+  display: inline-flex;
   align-items: center;
+  gap: 12px;
+  z-index: 2;
+  margin-left: auto; 
 }
 
-.cartLink:hover {
-  color: rgb(255, 251, 0) !important;
+.welcome { color: #fff; opacity: .9; font-size: 14px; white-space: nowrap; }
+
+.navLink {
+  color: #fff !important;
+  font-weight: 600 !important;
+  text-decoration: none;
+}
+.navLink:hover {
+  color: rgb(255, 251, 0) !important;  
+  text-shadow: 0 3px 8px #fff;
 }
 
-/* ===== Slide-down + Fade per la navbar ===== */
+.cartLink {
+  font-size: 1.3rem !important;
+  position: relative;         
+  margin-right: 2rem;         
+}
+
+/* badge a destra dell'icona, centrato verticalmente */
+.cartBadge {
+  position: absolute;
+  left: calc(100% + 8px);     /* fuori a destra dell'icona/link */
+  top: 50%;
+  transform: translateY(-50%);
+  font-size: 11px;
+  line-height: 1;
+  padding: 4px 6px;
+  min-width: 18px;
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  pointer-events: none;       
+}
+
+/* ===== Burger: ultima icona a destra ===== */
+.burgerBtn {
+  width: 46px; height: 46px;
+  border: 1px solid rgba(255,255,255,0.2);
+  border-radius: 12px;
+  background: rgba(255,255,255,0.06);
+  display: inline-flex;
+  align-items: center; justify-content: center;
+  cursor: pointer;
+margin-right: 2rem;
+margin-left: 2rem;
+}
+.burgerBtn:focus { outline: 2px solid rgba(255,255,255,0.35); outline-offset: 2px; }
+.burgerBtn i { font-size: 18px; color: #fff; }
+
+/* ===== Animazione di ENTRATA NAVBAR (coerente con Home) ===== */
 .navInit {
   opacity: 0;
   transform: translateY(-16px);
-  will-change: opacity, transform;
+  will-change: opacity, transform, filter;
+  filter: saturate(0.2);
 }
-
-/* Keyframes dell'animazione */
 @keyframes navSlideDownFade {
-  from {
-    opacity: 0;
-    transform: translateY(-80px);
-    filter: saturate(0.05);
-  }
-  to {
-    opacity: 1;
-    transform: translateY(0);
-    filter: saturate(1);
-  }
+  from { opacity: 0; transform: translateY(-80px); filter: saturate(0.1); }
+  to   { opacity: 1; transform: translateY(0);      filter: saturate(1); }
 }
-
-/* Stato animato (da aggiungere dopo il mount) */
 .navIn {
-  animation: navSlideDownFade 1520ms cubic-bezier(.22,.61,.36,1) both;
+  animation: navSlideDownFade 720ms cubic-bezier(.22,.61,.36,1) both;
 }
 
-/* Accessibilità: se l'utente preferisce meno movimento, disabilita l'animazione */
+/* Accessibilità: meno movimento */
 @media (prefers-reduced-motion: reduce) {
-  .navInit {
-    opacity: 1;
-    transform: none;
-  }
-  .navIn {
-    animation: none !important;
-  }
+  .navInit { opacity: 1; transform: none; filter: none; }
+  .navIn { animation: none !important; }
+}
+
+/* ===== Pannello burger: animazione  ===== */
+.menuPanel {
+  position: absolute;
+  top: 100%; left: 0; right: 0;
+
+  background: var(--nav-bg); 
+  border-top: 1px solid rgba(255,255,255,0.12);
+
+  overflow: hidden;
+  transition:
+    max-height 520ms cubic-bezier(.22,.61,.36,1),
+    opacity 520ms cubic-bezier(.22,.61,.36,1),
+    transform 520ms cubic-bezier(.22,.61,.36,1);
+}
+.menuHidden {
+  max-height: 0;
+  opacity: 0;
+  transform: translateY(-4px);
+  pointer-events: none;
+}
+.menuVisible {
+  max-height: 500px; 
+  opacity: 1;
+  transform: translateY(0);
+  pointer-events: auto;
+}
+
+/* contenitore interno con stesso bg e link centrati */
+.menuInner {
+  display: grid;
+  grid-auto-rows: minmax(44px, auto);
+  padding: 10px 4vw 14px 4vw;
+  gap: 12px;
+
+  justify-items: center;
+  background: var(--nav-bg);
+}
+
+/* link: no bordi, nessuna decorazione, gialli SOLO hover/focus-visible */
+.menuLink {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  text-align: center;
+
+  height: 44px;
+  width: clamp(220px, 60vw, 420px);
+  margin-inline: auto;
+
+  color: #fff;
+  font-weight: 700;
+
+  text-decoration: none;  
+  border: none;           
+  border-radius: 12px;
+  padding: 0 12px;
+
+  background: var(--nav-bg); 
+}
+
+/* Mantieni bianco in visited/active (niente giallo fisso) */
+.menuLink:visited,
+.menuLink:active {
+  color: #fff;
+  text-decoration: none;
+}
+
+/* Giallo SOLO in hover o focus-visible (accessibilità tastiera) */
+.menuLink:hover,
+.menuLink:focus-visible {
+  color: rgb(255, 251, 0);
+  text-decoration: none;
+}
+
+/* Anti-underline del brand se mai ricompare */
+.navRoot a.navbar-brand,
+.navRoot a.navbar-brand:link,
+.navRoot a.navbar-brand:visited,
+.navRoot a.navbar-brand:hover,
+.navRoot a.navbar-brand:focus,
+.navRoot a.navbar-brand:active {
+  text-decoration: none !important;
 }
 
 
-
-
-/* Responsive: smartphone */
-@media screen and (max-width: 600px) {
-  .navRoot {
-    height: 60px;
-  }
-  .brand {
-    font-size: 1.2em;
-    padding-left: 0;
-    text-align: center;
-    margin-left: 12vw; /* adatta il brand su mobile */
-  }
-  .togglerMobile {
-    background-color: rgba(22, 22, 22, 0.95);
-    margin-right: 50px;
-  }
-  .navList {
-    margin-left: 0;
-    margin-right: 0;
-    padding-right: 0;
-  }
-  .navItem {
-    margin-right: 0;
-  }
+@media (max-width: 1100px) {
+  .brand { font-size: 1.5em; }
 }
-
-/* Responsive: tablet */
-@media screen and (min-width: 601px) and (max-width: 1024px) {
-  .navRoot {
-    height: 100px;
-  }
-  .collapseBg {
-    background-color: rgba(22, 22, 22, 0.95);
-  }
+@media (max-width: 900px) {
+  .logoPage { width: 42px; }
+  .brand { font-size: 1.25em; }
+  .rightCluster { gap: 10px; }
 }
