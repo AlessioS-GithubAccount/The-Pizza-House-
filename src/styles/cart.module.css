@@ -1,21 +1,36 @@
 /* src/styles/cart.module.css */
 
-/* Pannelli base */
+/* =========================
+   Pannelli base + animazioni
+   ========================= */
 .panel {
   background-color: rgba(255, 255, 255, 0.06);
   color: antiquewhite;
   border: 1px solid rgba(255, 255, 255, 0.25);
   border-radius: 16px;
+
+  /* animazione ingresso */
+  opacity: 0;
+  transform: translateY(12px);
+  animation: cartCardIn 640ms cubic-bezier(.22,.61,.36,1) 60ms forwards;
 }
 
 .sticky {
   position: sticky;
   top: 88px;
+
+  /* effetto leggero quando appoggiato */
+  transition: box-shadow 240ms ease, transform 240ms ease;
 }
 
 .payCard {
   background: rgba(0, 0, 0, 0.35);
   border: 1px solid rgba(255, 255, 255, 0.25);
+
+  /* animazione ingresso (leggermente più lenta) */
+  opacity: 0;
+  transform: translateY(14px);
+  animation: cartCardIn 720ms cubic-bezier(.22,.61,.36,1) 120ms forwards;
 }
 
 .titleOrder {
@@ -33,7 +48,7 @@
   margin: 0;
 }
 
-/* ogni item: meno padding verticale + separatore sottile */
+/* ogni item: meno padding verticale + separatore sottile + animazione */
 .orderList :global(.list-group-item) {
   padding: 8px 10px;
   line-height: 1.2;
@@ -41,10 +56,37 @@
   border: 0;
   border-bottom: 1px solid rgba(255, 255, 255, 0.12);
   margin: 0;
-}
 
+  /* animazione ingresso per singolo item (stagger) */
+  opacity: 0;
+  transform: translateY(10px);
+  animation: cartItemIn 520ms cubic-bezier(.22,.61,.36,1) forwards;
+
+  /* micro-hover lift */
+  transition: transform 160ms ease, background-color 160ms ease;
+}
 .orderList :global(.list-group-item:last-child) {
   border-bottom: 0;
+}
+
+/* Stagger: ritardi progressivi per i primi 12 elementi (aumenta se ti serve) */
+.orderList :global(.list-group-item:nth-child(1))  { animation-delay: 120ms; }
+.orderList :global(.list-group-item:nth-child(2))  { animation-delay: 160ms; }
+.orderList :global(.list-group-item:nth-child(3))  { animation-delay: 200ms; }
+.orderList :global(.list-group-item:nth-child(4))  { animation-delay: 240ms; }
+.orderList :global(.list-group-item:nth-child(5))  { animation-delay: 280ms; }
+.orderList :global(.list-group-item:nth-child(6))  { animation-delay: 320ms; }
+.orderList :global(.list-group-item:nth-child(7))  { animation-delay: 360ms; }
+.orderList :global(.list-group-item:nth-child(8))  { animation-delay: 400ms; }
+.orderList :global(.list-group-item:nth-child(9))  { animation-delay: 440ms; }
+.orderList :global(.list-group-item:nth-child(10)) { animation-delay: 480ms; }
+.orderList :global(.list-group-item:nth-child(11)) { animation-delay: 520ms; }
+.orderList :global(.list-group-item:nth-child(12)) { animation-delay: 560ms; }
+
+/* hover gradevole */
+.orderList :global(.list-group-item:hover) {
+  transform: translateY(-1px);
+  background-color: rgba(255, 255, 255, 0.04);
 }
 
 /* gap interno più stretto tra immagine e testo */
@@ -84,4 +126,30 @@
     width: 52px !important;
     height: 52px !important;
   }
+}
+
+/* =========================
+   Riduzione movimento
+   ========================= */
+@media (prefers-reduced-motion: reduce) {
+  .panel,
+  .payCard,
+  .orderList :global(.list-group-item) {
+    animation: none !important;
+    transform: none !important;
+    opacity: 1 !important;
+  }
+}
+
+/* =========================
+   Keyframes
+   ========================= */
+@keyframes cartCardIn {
+  from { opacity: 0; transform: translateY(12-14px); filter: saturate(0.6); }
+  to   { opacity: 1; transform: translateY(0);       filter: saturate(1);   }
+}
+
+@keyframes cartItemIn {
+  from { opacity: 0; transform: translateY(10px); }
+  to   { opacity: 1; transform: translateY(0);     }
 }

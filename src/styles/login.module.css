@@ -3,11 +3,17 @@
   max-width: 520px;
   margin: 0 auto;
   margin-top: 5rem !important;
+  margin-bottom: 2rem !important;
   padding: 40px 20px;
   border-radius: 12px;
   background-color: rgba(0, 0, 0, 0.5);
   color: antiquewhite;
   box-shadow: 0 0 20px rgba(0, 0, 0, 0.3);
+
+  /* Animazione card in */
+  opacity: 0;
+  transform: translateY(14px);
+  animation: cardIn 720ms cubic-bezier(.22,.61,.36,1) 60ms forwards;
 }
 
 /* Titolo */
@@ -17,6 +23,11 @@
   font-family: 'Bebas Neue', sans-serif;
   font-size: 2.5rem;
   color: antiquewhite;
+
+  /* fade-up leggero, dopo la card */
+  opacity: 0;
+  transform: translateY(10px);
+  animation: fadeUpIn 640ms cubic-bezier(.22,.61,.36,1) 140ms forwards;
 }
 
 /* Form */
@@ -24,17 +35,33 @@
   display: flex;
   flex-direction: column;
   gap: 20px;
+
+  /* sblocco stagger figli in alcuni webkit */
+  opacity: 0.999;
+  animation: subtleAppear 1ms linear 240ms forwards;
 }
 
 .formGroup {
   display: flex;
   flex-direction: column;
-}
 
+  /* Stagger sui campi */
+  opacity: 0;
+  transform: translateY(10px);
+  animation: fadeUpIn 560ms cubic-bezier(.22,.61,.36,1) forwards;
+}
+.formGroup:nth-child(1) { animation-delay: 240ms; }
+.formGroup:nth-child(2) { animation-delay: 300ms; }
+.formGroup:nth-child(3) { animation-delay: 360ms; }
+.formGroup:nth-child(4) { animation-delay: 420ms; }
+/* aggiungi altre righe se hai più campi */
+
+/* Label */
 .formLabel {
   font-weight: 600;
   margin-bottom: 6px;
   color: antiquewhite;
+  opacity: 0.96;
 }
 
 /* Pulsante submit */
@@ -45,13 +72,22 @@
   border-radius: 8px;
   font-weight: bold !important;
   color: #fff;
-  transition: background-color 0.3s ease;
+  transition: background-color 0.3s ease, transform 140ms ease;
+
+  /* pop-in dopo i campi */
+  opacity: 0;
+  transform: translateY(8px) scale(0.98);
+  animation: fadePopIn 560ms cubic-bezier(.2,.8,.2,1) 480ms forwards;
 }
 .submitBtn:hover {
   background-color: #a77c1b;
+  transform: translateY(-1px) scale(1.01);
+}
+.submitBtn:active {
+  transform: translateY(0) scale(0.99);
 }
 
-/* Alert errore */
+/* Alert errore (se appare dinamicamente, fai bump) */
 .errorAlert {
   background-color: rgba(255, 0, 0, 0.1);
   border: 1px solid red;
@@ -59,6 +95,8 @@
   padding: 10px;
   border-radius: 6px;
   text-align: center;
+
+  animation: fadePopIn 420ms cubic-bezier(.2,.8,.2,1);
 }
 
 /* Link registrazione */
@@ -66,6 +104,11 @@
   text-align: center;
   margin-top: 16px;
   color: antiquewhite;
+
+  /* fade-in leggero */
+  opacity: 0;
+  transform: translateY(6px);
+  animation: fadeUpIn 480ms cubic-bezier(.22,.61,.36,1) 520ms forwards;
 }
 .registerLink a {
   color: #c1922e;
@@ -84,3 +127,38 @@
     font-size: 2rem;
   }
 }
+
+/* Riduzione movimento */
+@media (prefers-reduced-motion: reduce) {
+  .loginPage,
+  .loginTitle,
+  .loginForm,
+  .formGroup,
+  .submitBtn,
+  .errorAlert,
+  .registerLink {
+    animation: none !important;
+    transform: none !important;
+    opacity: 1 !important;
+  }
+}
+
+/* ============ Keyframes ============ */
+@keyframes cardIn {
+  from { opacity: 0; transform: translateY(14px); filter: saturate(0.6); }
+  to   { opacity: 1; transform: translateY(0);    filter: saturate(1);   }
+}
+
+@keyframes fadeUpIn {
+  from { opacity: 0; transform: translateY(10px); }
+  to   { opacity: 1; transform: translateY(0);    }
+}
+
+@keyframes fadePopIn {
+  0%   { opacity: 0; transform: translateY(8px) scale(0.98); }
+  60%  { opacity: 1; transform: translateY(0) scale(1.01); }
+  100% { opacity: 1; transform: translateY(0) scale(1); }
+}
+
+/* hack innocuo per sbloccare lo stagger in alcuni webkit vecchi */
+@keyframes subtleAppear { from { opacity: 0.999; } to { opacity: 0.999; } }
